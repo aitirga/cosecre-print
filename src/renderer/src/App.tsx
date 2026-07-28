@@ -16,6 +16,7 @@ import {
   PrinterIcon,
   SettingsIcon
 } from './components/icons'
+import { LogoMark } from './components/logo'
 
 export default function App(): ReactNode {
   const init = useApp((s) => s.init)
@@ -62,7 +63,7 @@ export default function App(): ReactNode {
     <DropTarget>
       <div className="flex h-full flex-col bg-ink-900">
         <header className="drag-region flex shrink-0 items-center gap-3 border-b border-ink-800 px-4 py-2.5 pl-20">
-          <PrinterIcon className="size-4 text-accent" />
+          <LogoMark className="size-[19px]" />
           <span className="text-[13px] font-semibold tracking-tight text-ink-100">Cosecre-print</span>
 
           <nav className="ml-4 flex items-center gap-1">

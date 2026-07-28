@@ -6,16 +6,18 @@ import type { Scheduler } from './queue/scheduler.js'
 import type { HistoryStore } from './store/history.js'
 import type { SettingsStore } from './store/settings.js'
 import { resolveLibreOffice } from './convert/libreoffice.js'
+import type { Updater } from './updater.js'
 
 export interface IpcContext {
   scheduler: Scheduler
   settings: SettingsStore
   history: HistoryStore
+  updater: Updater
   getWindow(): BrowserWindow | null
 }
 
 export function registerIpc(ctx: IpcContext): void {
-  const { scheduler, settings, history } = ctx
+  const { scheduler, settings, history, updater } = ctx
 
   let printerCache: Awaited<ReturnType<Awaited<ReturnType<typeof getDriver>>['listPrinters']>> = []
 
@@ -87,6 +89,10 @@ export function registerIpc(ctx: IpcContext): void {
     history.setLimit(next.historyLimit)
     return next
   })
+
+  ipcMain.handle(IPC.getUpdateState, () => updater.get())
+  ipcMain.handle(IPC.checkForUpdates, () => updater.check())
+  ipcMain.handle(IPC.applyUpdate, () => updater.apply())
 }
 
 const openDialogOptions = {

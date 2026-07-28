@@ -4,6 +4,15 @@ directories:
   output: release
   buildResources: build
 
+# This block does double duty: it tells electron-builder where to upload
+# installers, and it is what gets baked into the packaged app as
+# app-update.yml — which is how electron-updater knows where to look at
+# runtime. Keep the repo in sync with REPO in src/main/updater.ts.
+publish:
+  provider: github
+  owner: aitirga
+  repo: cosecre-print
+
 files:
   - out/**
   - package.json
@@ -17,10 +26,18 @@ mac:
   target:
     - target: dmg
       arch: [arm64, x64]
+    # The zip is not redundant. electron-updater can only read a mac update from
+    # a zip, so dropping this target silently breaks latest-mac.yml.
     - target: zip
       arch: [arm64, x64]
   category: public.app-category.utilities
   # Unsigned build: without this, macOS refuses to run the bundle at all.
+  #
+  # This one line is also what keeps macOS on check-and-notify instead of real
+  # auto-update. Squirrel.Mac will not replace an unsigned bundle, so deleting
+  # this (plus adding the MAC_CERT_* secrets the release workflow already reads)
+  # is all that in-place macOS updates need — src/main/updater.ts detects the
+  # signature at runtime and switches over by itself.
   identity: null
 
 win:
@@ -37,3 +54,6 @@ linux:
   target:
     - AppImage
   category: Utility
+  # package.json's author carries no email, and electron-builder needs one to
+  # write the AppImage's desktop entry.
+  maintainer: Aitor <aitirga@gmail.com>

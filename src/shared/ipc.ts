@@ -24,7 +24,12 @@ export const IPC = {
   getSettings: 'settings:get',
   setSettings: 'settings:set',
 
+  getUpdateState: 'update:get',
+  checkForUpdates: 'update:check',
+  applyUpdate: 'update:apply',
+
   // main -> renderer
   jobsChanged: 'jobs:changed',
-  historyChanged: 'history:changed'
+  historyChanged: 'history:changed',
+  updateStateChanged: 'update:changed'
 } as const

@@ -154,6 +154,38 @@ export interface AddFilesResult {
   rejected: { path: string; reason: string }[]
 }
 
+export type UpdatePhase =
+  | 'idle'
+  | 'checking'
+  | 'up-to-date'
+  | 'available'
+  | 'downloading'
+  | 'ready'
+  /** Running unpackaged: there is no update feed to check. */
+  | 'unsupported'
+  | 'error'
+
+/** Progress of the GitHub Releases update check, mirrored to the renderer. */
+export interface UpdateState {
+  phase: UpdatePhase
+  /** The version running right now. */
+  currentVersion: string
+  /** The newer version found on GitHub, when there is one. */
+  newVersion?: string
+  /** 0-100, while phase is 'downloading'. */
+  percent?: number
+  /** Why the last check failed, when phase is 'error'. */
+  message?: string
+  /**
+   * Whether this build can replace itself. Always true on Windows and Linux;
+   * on macOS it is detected from the bundle's code signature. When false the
+   * user downloads the installer from `releaseUrl` — see `src/main/updater.ts`.
+   */
+  canSelfInstall: boolean
+  /** GitHub release page for `newVersion`. */
+  releaseUrl?: string
+}
+
 /** The surface exposed on `window.cosecrePrint` by the preload bridge. */
 export interface CosecrePrintApi {
   listPrinters(): Promise<PrinterInfo[]>
@@ -185,7 +217,13 @@ export interface CosecrePrintApi {
   getSettings(): Promise<Settings>
   setSettings(patch: Partial<Settings>): Promise<Settings>
 
+  getUpdateState(): Promise<UpdateState>
+  checkForUpdates(): Promise<UpdateState>
+  /** Restart into the new version, or open the release page where that is not possible. */
+  applyUpdate(): Promise<void>
+
   /** Fires on every job state transition. Returns an unsubscribe function. */
   onJobUpdate(cb: (jobs: Job[]) => void): () => void
   onHistoryUpdate(cb: (history: HistoryEntry[]) => void): () => void
+  onUpdateState(cb: (state: UpdateState) => void): () => void
 }

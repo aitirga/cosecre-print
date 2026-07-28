@@ -1,4 +1,6 @@
-# Cosecre-print
+<p align="center">
+  <img src="brand/wordmark.png" alt="Cosecre-print" width="552" />
+</p>
 
 A local desktop app for printing batches of PDF and Word documents **concurrently**, with live
 job tracking and a persistent print history.
@@ -59,6 +61,68 @@ first launch, and Windows will show a SmartScreen warning.
 
 Note that `build:win` must run **on Windows** (or in CI on a Windows runner). electron-builder
 cannot reliably produce the NSIS installer from macOS.
+
+## Updating
+
+The app updates itself from **GitHub Releases** — there is no server to run. electron-builder
+uploads the installers plus a `latest.yml` / `latest-mac.yml` manifest to the release, and
+`electron-updater` inside the app reads that manifest.
+
+Cutting a release is a tag push:
+
+```bash
+npm version minor && git push --follow-tags
+```
+
+That fires [`.github/workflows/release.yml`](.github/workflows/release.yml), which builds macOS,
+Windows and Linux in parallel, uploads all three to a **draft** release, and then — only once every
+platform has finished — publishes it. That ordering matters: a client never sees a release that is
+missing its own installer, and if any platform fails the release simply stays a draft.
+
+The tag must match the version in `package.json`, which `npm version` guarantees. That version is
+what the app compares against, so a mismatched tag produces a release nobody is ever offered.
+
+In the app, checks run 8 seconds after launch and every 6 hours after that. Settings → **Updates**
+shows the running version and has a **Check now** button.
+
+### What happens on each platform
+
+| Platform | Behaviour |
+|---|---|
+| Windows | **Full auto-update.** Downloads in the background, installs on next quit — or immediately via **Restart and install**. |
+| Linux | **Full auto-update**, when running as an AppImage. |
+| macOS | **Check and notify.** Reports the new version and opens the release page to download the DMG. |
+
+macOS is the odd one out, and not by choice. Squirrel.Mac reads the running bundle's designated
+code requirement before replacing it, so an app that is unsigned — or only ad-hoc signed — **cannot**
+update itself in place; it fails with an opaque signature error. Rather than pretend otherwise, the
+app asks `codesign` what it is at startup and degrades to a download link, saying why.
+
+Because that check happens at runtime, **enabling real macOS auto-update takes no code change**:
+
+1. Add a Developer ID certificate as the repository secrets `MAC_CERT_P12_BASE64` (the `.p12`,
+   base64-encoded) and `MAC_CERT_PASSWORD`. The workflow already reads both.
+2. Delete `identity: null` from [`electron-builder.yml`](electron-builder.yml).
+
+The app then detects the signature and switches to in-place updates on its own.
+
+> **Unsigned macOS downloads are quarantined.** Until the app is signed *and notarised*, a DMG
+> downloaded from GitHub will be refused by Gatekeeper — usually as "damaged and can't be opened".
+> Clear the quarantine flag to open it:
+>
+> ```bash
+> xattr -dr com.apple.quarantine /Applications/Cosecre-print.app
+> ```
+
+## Branding
+
+The icon and wordmark sources live in [`brand/`](brand/), with the rationale and the rules in
+[`brand/README.md`](brand/README.md). `build/icon.png` is the 1024 px master that electron-builder
+turns into the `.icns` and `.ico`; regenerate it from the SVG with:
+
+```bash
+npm run brand
+```
 
 ## How it works
 
@@ -123,7 +187,11 @@ src/
 │   ├── printing/    # PrintDriver interface + unix/windows implementations
 │   ├── convert/     # LibreOffice discovery, conversion, profile-isolated pool
 │   ├── queue/       # job model, state machine, scheduler, spooler polling
-│   └── store/       # atomic JSON settings + history
+│   ├── store/       # atomic JSON settings + history
+│   └── updater.ts   # GitHub Releases update check
 ├── preload/         # contextBridge API (`window.cosecrePrint`)
 └── renderer/        # React UI
+
+brand/               # icon + wordmark sources, and the concepts behind them
+build/icon.png       # generated 1024px master, consumed by electron-builder
 ```

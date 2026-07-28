@@ -6,7 +6,8 @@ import type {
   Job,
   PrinterInfo,
   PrintOptions,
-  Settings
+  Settings,
+  UpdateState
 } from '@shared/types'
 
 export interface Notice {
@@ -23,6 +24,7 @@ interface AppState {
   printers: PrinterInfo[]
   settings: Settings | null
   converter: ConverterStatus | null
+  update: UpdateState | null
 
   selectedJobId: string | null
   view: View
@@ -49,6 +51,9 @@ interface AppState {
   clearHistory(): Promise<void>
   saveSettings(patch: Partial<Settings>): Promise<void>
 
+  checkForUpdates(): Promise<void>
+  applyUpdate(): Promise<void>
+
   notify(kind: Notice['kind'], message: string): void
   dismissNotice(id: number): void
 }
@@ -61,20 +66,22 @@ export const useApp = create<AppState>((set, get) => ({
   printers: [],
   settings: null,
   converter: null,
+  update: null,
   selectedJobId: null,
   view: 'queue',
   settingsOpen: false,
   notices: [],
 
   async init() {
-    const [printers, settings, history, jobs, converter] = await Promise.all([
+    const [printers, settings, history, jobs, converter, update] = await Promise.all([
       window.cosecrePrint.listPrinters(),
       window.cosecrePrint.getSettings(),
       window.cosecrePrint.getHistory(),
       window.cosecrePrint.getJobs(),
-      window.cosecrePrint.getConverterStatus()
+      window.cosecrePrint.getConverterStatus(),
+      window.cosecrePrint.getUpdateState()
     ])
-    set({ printers, settings, history, jobs, converter })
+    set({ printers, settings, history, jobs, converter, update })
 
     window.cosecrePrint.onJobUpdate((next) => {
       set({ jobs: next })
@@ -85,6 +92,20 @@ export const useApp = create<AppState>((set, get) => ({
       }
     })
     window.cosecrePrint.onHistoryUpdate((next) => set({ history: next }))
+
+    window.cosecrePrint.onUpdateState((next) => {
+      const previous = get().update
+      set({ update: next })
+
+      // Announce a new version once, when it first becomes actionable — not on
+      // every download-progress tick.
+      if (next.phase === previous?.phase) return
+      if (next.phase === 'ready') {
+        get().notify('info', `Version ${next.newVersion} is ready — restart to install it.`)
+      } else if (next.phase === 'available') {
+        get().notify('info', `Version ${next.newVersion} is available to download.`)
+      }
+    })
   },
 
   select: (selectedJobId) => set({ selectedJobId }),
@@ -144,6 +165,14 @@ export const useApp = create<AppState>((set, get) => ({
     // The LibreOffice path may have changed, so re-check the converter.
     const converter = await window.cosecrePrint.getConverterStatus()
     set({ settings, converter })
+  },
+
+  async checkForUpdates() {
+    set({ update: await window.cosecrePrint.checkForUpdates() })
+  },
+
+  async applyUpdate() {
+    await window.cosecrePrint.applyUpdate()
   },
 
   notify(kind, message) {

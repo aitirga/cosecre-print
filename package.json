@@ -14,9 +14,15 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "build:mac": "npm run build && electron-builder --mac",
     "build:win": "npm run build && electron-builder --win",
-    "build:unpack": "npm run build && electron-builder --dir"
+    "build:linux": "npm run build && electron-builder --linux",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "release:mac": "npm run build && electron-builder --mac --publish always",
+    "release:win": "npm run build && electron-builder --win --publish always",
+    "release:linux": "npm run build && electron-builder --linux --publish always",
+    "brand": "node brand/build-icons.mjs"
   },
   "dependencies": {
+    "electron-updater": "^6.8.9",
     "p-queue": "^9.3.3",
     "pdf-to-printer": "^5.8.0",
     "unix-print": "^1.3.2"

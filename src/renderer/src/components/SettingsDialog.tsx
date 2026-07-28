@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { useApp } from '../store'
 import { Button, Field, Select, TextInput } from './ui'
 import { CloseIcon } from './icons'
+import { UpdateSection } from './UpdateSection'
 
 export function SettingsDialog(): ReactNode {
   const open = useApp((s) => s.settingsOpen)
@@ -115,6 +116,8 @@ export function SettingsDialog(): ReactNode {
             Word documents are converted to PDF with LibreOffice before printing, so the preview
             matches the printed output exactly.
           </p>
+
+          <UpdateSection />
         </div>
       </div>
     </div>

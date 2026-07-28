@@ -1,0 +1,66 @@
+<!--
+  Source for brand/wordmark.png — the README banner.
+
+  Rendered through Chrome rather than a plain SVG because the wordmark uses a
+  system font: baking it to pixels is what keeps it identical on GitHub, in
+  docs, and anywhere else the SVG's font would not resolve.
+
+  Regenerate with `npm run brand`.
+-->
+<style>
+  :root {
+    --ink-900: #0b0d12;
+    --ink-800: #161a23;
+    --ink-400: #6b7689;
+    --ink-100: #e4e9f2;
+    --accent: #4f8ef7;
+  }
+  body {
+    margin: 0;
+    background: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 26px;
+    padding: 40px 60px;
+    background: linear-gradient(160deg, #12161f 0%, #0a0c11 100%);
+    border: 1px solid var(--ink-800);
+    border-radius: 22px;
+  }
+  .text { display: flex; flex-direction: column; gap: 9px; }
+  .wordmark { font-size: 46px; line-height: 1; letter-spacing: -0.03em; }
+  .wordmark b { font-weight: 650; color: var(--ink-100); }
+  .wordmark i { font-style: normal; font-weight: 400; color: var(--ink-400); }
+  .tagline { font-size: 16px; color: var(--ink-400); letter-spacing: -0.005em; }
+  .tagline em { font-style: normal; color: var(--accent); }
+</style>
+
+<div class="banner">
+  <svg width="94" height="94" viewBox="78 70 372 372" aria-label="Cosecre-print">
+    <defs>
+      <linearGradient id="paper" x1="0" y1="0" x2="0.35" y2="1">
+        <stop offset="0" stop-color="#ffffff" />
+        <stop offset="1" stop-color="#d7e0f2" />
+      </linearGradient>
+      <linearGradient id="blue" x1="0" y1="0" x2="0.4" y2="1">
+        <stop offset="0" stop-color="#6ba2ff" />
+        <stop offset="1" stop-color="#2f6fdd" />
+      </linearGradient>
+    </defs>
+    <path d="M 329.7 350.9 A 132 132 0 1 1 329.7 161.1" transform="translate(-8 0)"
+          fill="none" stroke="url(#blue)" stroke-width="58" />
+    <rect x="210" y="214" width="232" height="84" rx="19" fill="url(#paper)" />
+    <g fill="#0b0d12" opacity="0.55">
+      <rect x="248" y="238" width="152" height="13" rx="6.5" />
+      <rect x="248" y="262" width="100" height="13" rx="6.5" />
+    </g>
+  </svg>
+
+  <div class="text">
+    <span class="wordmark"><b>Cosecre</b><i>-print</i></span>
+    <span class="tagline">Print PDF and Word documents <em>concurrently</em></span>
+  </div>
+</div>

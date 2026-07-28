@@ -1,0 +1,77 @@
+name: Release
+
+# Tagging is the trigger, so cutting a release is:
+#   npm version minor && git push --follow-tags
+#
+# The tag must match the version in package.json — electron-builder writes that
+# version into latest.yml / latest-mac.yml / latest-linux.yml, and
+# electron-updater compares against it. A mismatch produces a release that no
+# client is ever offered.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      # One platform failing must not throw away the others' artifacts. The
+      # release stays a draft either way, so a partial build is never published.
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            script: release:mac
+          - os: windows-latest
+            script: release:win
+          - os: ubuntu-latest
+            script: release:linux
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build and publish
+        run: npm run ${{ matrix.script }}
+        env:
+          # electron-builder picks this up to create the draft release and
+          # upload both the installers and the *.yml update manifests.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Wired up but empty. To turn on real in-place updates for macOS, add a
+          # Developer ID certificate as these two repository secrets and delete
+          # `identity: null` from electron-builder.yml — nothing else changes,
+          # because the app detects the signature at runtime and switches over
+          # on its own. See the Updating section of the README.
+          CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+
+  # Publishing only after every platform has uploaded means a client never sees
+  # a release that is missing its own installer.
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    # A workflow_dispatch run has no tag, so GITHUB_REF_NAME would be a branch
+    # name and there would be no draft release to publish.
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Publish the draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --draft=false \
+            --latest

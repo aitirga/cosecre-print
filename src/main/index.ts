@@ -1,4 +1,5 @@
 import { app, BrowserWindow, shell } from 'electron'
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { IPC } from '@shared/ipc'
@@ -6,11 +7,13 @@ import { registerIpc } from './ipc.js'
 import { Scheduler } from './queue/scheduler.js'
 import { HistoryStore } from './store/history.js'
 import { SettingsStore } from './store/settings.js'
+import { Updater } from './updater.js'
 
 const dirname = fileURLToPath(new URL('.', import.meta.url))
 
 let mainWindow: BrowserWindow | null = null
 let scheduler: Scheduler | null = null
+let updater: Updater | null = null
 
 function createWindow(): BrowserWindow {
   const window = new BrowserWindow({
@@ -53,6 +56,13 @@ function createWindow(): BrowserWindow {
 app.whenReady().then(async () => {
   app.setName('Cosecre-print')
 
+  // A packaged build gets its icon from the bundle, but `npm run dev` would
+  // otherwise sit in the Dock as a generic Electron diamond.
+  if (!app.isPackaged && process.platform === 'darwin') {
+    const icon = join(dirname, '../../build/icon.png')
+    if (existsSync(icon)) app.dock?.setIcon(icon)
+  }
+
   const userData = app.getPath('userData')
   const settings = new SettingsStore(userData)
   const history = new HistoryStore(userData)
@@ -65,10 +75,18 @@ app.whenReady().then(async () => {
     onHistory: (entries) => mainWindow?.webContents.send(IPC.historyChanged, entries)
   })
 
+  updater = new Updater({
+    onState: (state) => mainWindow?.webContents.send(IPC.updateStateChanged, state)
+  })
+  // Resolved before the window exists so the renderer's first read of the
+  // update state is already the final answer.
+  await updater.init()
+
   registerIpc({
     scheduler,
     settings,
     history,
+    updater,
     getWindow: () => mainWindow
   })
 
@@ -86,4 +104,5 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   // Remove converted PDFs and LibreOffice profile directories.
   void scheduler?.dispose()
+  updater?.dispose()
 })

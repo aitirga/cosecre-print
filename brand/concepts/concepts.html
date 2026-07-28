@@ -1,0 +1,215 @@
+<style>
+  :root {
+    --ink-950: #080a0f;
+    --ink-900: #0b0d12;
+    --ink-850: #10131a;
+    --ink-800: #161a23;
+    --ink-700: #1f2532;
+    --ink-400: #6b7689;
+    --ink-300: #8e99ad;
+    --ink-100: #e4e9f2;
+    --accent: #4f8ef7;
+  }
+  body {
+    margin: 0;
+    background: var(--ink-950);
+    color: var(--ink-100);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet { padding: 56px 60px 64px; width: 1520px; box-sizing: border-box; }
+  h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .sub { color: var(--ink-400); font-size: 15px; margin: 0 0 44px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
+  .card {
+    background: var(--ink-850);
+    border: 1px solid var(--ink-700);
+    border-radius: 18px;
+    padding: 28px 28px 26px;
+    position: relative;
+  }
+  .card.pick { border-color: rgba(79,142,247,0.55); }
+  .pickflag {
+    position: absolute; top: -1px; right: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #0b0d12; background: var(--accent);
+    padding: 5px 10px; border-radius: 0 0 7px 7px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--accent); background: rgba(79,142,247,0.12);
+    border: 1px solid rgba(79,142,247,0.28);
+    padding: 4px 9px; border-radius: 6px; margin-bottom: 14px;
+  }
+  .name { font-size: 21px; font-weight: 600; margin: 0 0 5px; letter-spacing: -0.01em; }
+  .desc { font-size: 13px; line-height: 1.55; color: var(--ink-300); margin: 0 0 22px; min-height: 84px; }
+  .hero { display: flex; justify-content: center; margin-bottom: 26px; }
+  .sizes {
+    display: flex; align-items: flex-end; gap: 22px;
+    padding: 18px 20px; background: var(--ink-900);
+    border: 1px solid var(--ink-800); border-radius: 12px;
+  }
+  .size { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .size span { font-size: 10px; color: var(--ink-400); font-variant-numeric: tabular-nums; }
+  .lockup {
+    margin-top: 22px; padding: 20px; background: var(--ink-900);
+    border: 1px solid var(--ink-800); border-radius: 12px;
+    display: flex; align-items: center; gap: 13px;
+  }
+  .wordmark { font-size: 26px; letter-spacing: -0.025em; line-height: 1; }
+  .wordmark b { font-weight: 650; color: var(--ink-100); }
+  .wordmark i { font-style: normal; font-weight: 400; color: var(--ink-400); }
+  .note { margin-top: 46px; font-size: 13px; color: var(--ink-400); line-height: 1.6; max-width: 1120px; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-300); }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2130" />
+      <stop offset="1" stop-color="#0a0c11" />
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#d7e0f2" />
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#6ba2ff" />
+      <stop offset="1" stop-color="#2f6fdd" />
+    </linearGradient>
+    <linearGradient id="blueDeep" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#3f74c8" />
+      <stop offset="1" stop-color="#24518f" />
+    </linearGradient>
+
+    <!-- ===== 1. BATCH — a wide fan of sheets feeding one slot ==================== -->
+    <symbol id="c1" viewBox="0 0 512 512">
+      <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
+      <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
+            stroke="rgba(255,255,255,0.09)" stroke-width="2" />
+      <!-- the dark separation stroke is load-bearing: without it the fanned
+           sheets merge into one blob as soon as the icon is downsampled -->
+      <g transform="rotate(-24 256 470)">
+        <rect x="186" y="150" width="140" height="250" rx="16"
+              fill="url(#blueDeep)" stroke="#0c0f16" stroke-width="11" />
+      </g>
+      <g transform="rotate(24 256 470)">
+        <rect x="186" y="150" width="140" height="250" rx="16"
+              fill="url(#blue)" stroke="#0c0f16" stroke-width="11" />
+      </g>
+      <rect x="186" y="150" width="140" height="250" rx="16"
+            fill="url(#paper)" stroke="#0c0f16" stroke-width="11" />
+      <g fill="#0b0d12" opacity="0.82">
+        <rect x="214" y="192" width="84" height="15" rx="7.5" />
+        <rect x="214" y="226" width="84" height="15" rx="7.5" />
+        <rect x="214" y="260" width="54" height="15" rx="7.5" />
+      </g>
+      <rect x="70" y="372" width="372" height="68" rx="34" fill="url(#blue)" />
+    </symbol>
+
+    <!-- ===== 2. APERTURE — a C monogram whose gap is the paper slot ============== -->
+    <symbol id="c2" viewBox="0 0 512 512">
+      <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
+      <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
+            stroke="rgba(255,255,255,0.09)" stroke-width="2" />
+      <path d="M 329.7 350.9 A 132 132 0 1 1 329.7 161.1"
+            transform="translate(-8 0)"
+            fill="none" stroke="url(#blue)" stroke-width="58" />
+      <rect x="210" y="214" width="232" height="84" rx="19" fill="url(#paper)" />
+      <g fill="#0b0d12" opacity="0.55">
+        <rect x="326" y="239" width="94" height="13" rx="6.5" />
+        <rect x="326" y="264" width="62" height="13" rx="6.5" />
+      </g>
+    </symbol>
+
+    <!-- ===== 3. MOMENTUM — a document with a throughput badge ==================== -->
+    <symbol id="c3" viewBox="0 0 512 512">
+      <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
+      <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
+            stroke="rgba(255,255,255,0.09)" stroke-width="2" />
+      <g transform="translate(-30 -16)">
+        <rect x="138" y="104" width="200" height="272" rx="24" fill="url(#paper)" />
+        <g fill="#0b0d12" opacity="0.78">
+          <rect x="172" y="152" width="132" height="16" rx="8" />
+          <rect x="172" y="192" width="132" height="16" rx="8" />
+          <rect x="172" y="232" width="88" height="16" rx="8" />
+        </g>
+        <circle cx="352" cy="356" r="86" fill="url(#blue)" stroke="#0c0f16" stroke-width="15" />
+        <g fill="none" stroke="#ffffff" stroke-width="21" stroke-linecap="round"
+           stroke-linejoin="round">
+          <path d="M 317 326 L 347 356 L 317 386" />
+          <path d="M 357 326 L 387 356 L 357 386" />
+        </g>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="sheet">
+  <h1>Cosecre-print — logo concepts</h1>
+  <p class="sub">Same palette as the app (accent&nbsp;#4f8ef7 on ink&nbsp;#0b0d12). Shown full size and at the
+    sizes that actually decide it: 64&nbsp;px Dock, 32&nbsp;px taskbar, 16&nbsp;px title bar.</p>
+
+  <div class="grid">
+    <div class="card">
+      <span class="tag">Concept 1</span>
+      <p class="name">Batch</p>
+      <p class="desc">A wide fan of three sheets feeding one slot. Says “many documents, one printer”
+        literally, and it is the most self-explanatory of the three. Cost: it is the busiest, and the
+        fan is the first thing to go mushy when downsampled.</p>
+      <div class="hero"><svg width="228" height="228"><use href="#c1" width="228" height="228" /></svg></div>
+      <div class="sizes">
+        <div class="size"><svg width="64" height="64"><use href="#c1" width="64" height="64" /></svg><span>64</span></div>
+        <div class="size"><svg width="32" height="32"><use href="#c1" width="32" height="32" /></svg><span>32</span></div>
+        <div class="size"><svg width="16" height="16"><use href="#c1" width="16" height="16" /></svg><span>16</span></div>
+      </div>
+      <div class="lockup">
+        <svg width="40" height="40"><use href="#c1" width="40" height="40" /></svg>
+        <span class="wordmark"><b>Cosecre</b><i>-print</i></span>
+      </div>
+    </div>
+
+    <div class="card pick">
+      <span class="pickflag">Recommended</span>
+      <span class="tag">Concept 2</span>
+      <p class="name">Aperture</p>
+      <p class="desc">A bold <b>C</b> whose opening <em>is</em> the paper slot, with a sheet coming
+        through it. The only one carrying the Cosecre initial, the boldest silhouette, and the only
+        one still unambiguous at 16&nbsp;px.</p>
+      <div class="hero"><svg width="228" height="228"><use href="#c2" width="228" height="228" /></svg></div>
+      <div class="sizes">
+        <div class="size"><svg width="64" height="64"><use href="#c2" width="64" height="64" /></svg><span>64</span></div>
+        <div class="size"><svg width="32" height="32"><use href="#c2" width="32" height="32" /></svg><span>32</span></div>
+        <div class="size"><svg width="16" height="16"><use href="#c2" width="16" height="16" /></svg><span>16</span></div>
+      </div>
+      <div class="lockup">
+        <svg width="40" height="40"><use href="#c2" width="40" height="40" /></svg>
+        <span class="wordmark"><b>Cosecre</b><i>-print</i></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag">Concept 3</span>
+      <p class="name">Momentum</p>
+      <p class="desc">A document with a throughput badge — the base-object-plus-accent-badge pattern
+        most utility apps use. Very legible small (white sheet, blue dot), but the chevrons say
+        “fast”, not specifically “print”.</p>
+      <div class="hero"><svg width="228" height="228"><use href="#c3" width="228" height="228" /></svg></div>
+      <div class="sizes">
+        <div class="size"><svg width="64" height="64"><use href="#c3" width="64" height="64" /></svg><span>64</span></div>
+        <div class="size"><svg width="32" height="32"><use href="#c3" width="32" height="32" /></svg><span>32</span></div>
+        <div class="size"><svg width="16" height="16"><use href="#c3" width="16" height="16" /></svg><span>16</span></div>
+      </div>
+      <div class="lockup">
+        <svg width="40" height="40"><use href="#c3" width="40" height="40" /></svg>
+        <span class="wordmark"><b>Cosecre</b><i>-print</i></span>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">All three are pure vector with no hairlines, so they survive macOS downsampling the
+    1024&nbsp;px master into an .icns and Windows into an .ico. The dark rounded tile is baked into the
+    artwork, which is the usual choice for apps that aren’t Apple-designed. Switching the shipped mark
+    to another concept is a one-file change — <code>brand/icon.svg</code>, then <code>npm run brand</code>.</p>
+</div>

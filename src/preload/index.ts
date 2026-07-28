@@ -8,7 +8,8 @@ import type {
   PrinterInfo,
   PrintOptions,
   CosecrePrintApi,
-  Settings
+  Settings,
+  UpdateState
 } from '@shared/types'
 
 const api: CosecrePrintApi = {
@@ -50,6 +51,10 @@ const api: CosecrePrintApi = {
   setSettings: (patch: Partial<Settings>) =>
     ipcRenderer.invoke(IPC.setSettings, patch) as Promise<Settings>,
 
+  getUpdateState: () => ipcRenderer.invoke(IPC.getUpdateState) as Promise<UpdateState>,
+  checkForUpdates: () => ipcRenderer.invoke(IPC.checkForUpdates) as Promise<UpdateState>,
+  applyUpdate: () => ipcRenderer.invoke(IPC.applyUpdate) as Promise<void>,
+
   onJobUpdate: (cb) => {
     const listener = (_event: unknown, jobs: Job[]): void => cb(jobs)
     ipcRenderer.on(IPC.jobsChanged, listener)
@@ -59,6 +64,11 @@ const api: CosecrePrintApi = {
     const listener = (_event: unknown, entries: HistoryEntry[]): void => cb(entries)
     ipcRenderer.on(IPC.historyChanged, listener)
     return () => ipcRenderer.removeListener(IPC.historyChanged, listener)
+  },
+  onUpdateState: (cb) => {
+    const listener = (_event: unknown, state: UpdateState): void => cb(state)
+    ipcRenderer.on(IPC.updateStateChanged, listener)
+    return () => ipcRenderer.removeListener(IPC.updateStateChanged, listener)
   }
 }
 
