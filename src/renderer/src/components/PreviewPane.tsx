@@ -142,10 +142,10 @@ export function PreviewPane({ job }: { job: Job | undefined }): ReactNode {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex items-center justify-between gap-3 border-b border-ink-800 px-4 py-2.5">
+      <div className="flex items-center justify-between gap-3 border-b border-mist-300 px-4 py-2.5">
         <div className="min-w-0">
-          <p className="truncate text-[13px] font-medium text-ink-100">{job.fileName}</p>
-          <p className="text-[11px] text-ink-400">
+          <p className="truncate text-[13px] font-medium text-ink-900">{job.fileName}</p>
+          <p className="text-[11px] text-ink-500">
             {loaded
               ? `${loaded.doc.numPages} page${loaded.doc.numPages === 1 ? '' : 's'}`
               : 'Loading…'}
@@ -161,7 +161,7 @@ export function PreviewPane({ job }: { job: Job | undefined }): ReactNode {
           >
             <ChevronLeft className="size-4" />
           </Button>
-          <span className="min-w-16 text-center text-[12px] tabular-nums text-ink-300">
+          <span className="min-w-16 text-center text-[12px] tabular-nums text-ink-600">
             {loaded ? `${page} / ${loaded.doc.numPages}` : '—'}
           </span>
           <Button
@@ -173,7 +173,7 @@ export function PreviewPane({ job }: { job: Job | undefined }): ReactNode {
             <ChevronRight className="size-4" />
           </Button>
 
-          <div className="mx-2 h-5 w-px bg-ink-700" />
+          <div className="mx-2 h-5 w-px bg-mist-300" />
 
           <Button
             aria-label="Zoom out"
@@ -183,7 +183,7 @@ export function PreviewPane({ job }: { job: Job | undefined }): ReactNode {
           >
             −
           </Button>
-          <span className="min-w-12 text-center text-[12px] tabular-nums text-ink-300">
+          <span className="min-w-12 text-center text-[12px] tabular-nums text-ink-600">
             {Math.round(zoom * 100)}%
           </span>
           <Button
@@ -197,7 +197,7 @@ export function PreviewPane({ job }: { job: Job | undefined }): ReactNode {
         </div>
       </div>
 
-      <div ref={containerRef} className="min-h-0 flex-1 overflow-auto bg-ink-950 p-6">
+      <div ref={containerRef} className="min-h-0 flex-1 overflow-auto bg-mist-400 p-6">
         {error ? (
           <EmptyState
             icon={<AlertIcon className="size-10" />}
@@ -207,11 +207,11 @@ export function PreviewPane({ job }: { job: Job | undefined }): ReactNode {
         ) : (
           <div className="flex justify-center">
             {loading && !loaded ? (
-              <Spinner className="mt-16 size-8 text-ink-400" />
+              <Spinner className="mt-16 size-8 text-ink-500" />
             ) : (
               <canvas
                 ref={canvasRef}
-                className="rounded shadow-2xl shadow-black/50 ring-1 ring-ink-700"
+                className="rounded bg-white shadow-xl shadow-ink-900/15 ring-1 ring-mist-400"
               />
             )}
           </div>

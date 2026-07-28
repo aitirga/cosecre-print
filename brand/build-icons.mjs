@@ -1,8 +1,9 @@
 /**
  * Regenerates the derived brand assets from their sources.
  *
- *   brand/icon.svg      ->  build/icon.png   (1024x1024, consumed by electron-builder)
- *   brand/wordmark.html ->  brand/wordmark.png (README banner)
+ *   brand/icon.svg               ->  build/icon.png   (1024x1024, consumed by electron-builder)
+ *   brand/wordmark.html          ->  brand/wordmark.png (README banner)
+ *   brand/concepts/concepts.html ->  brand/concepts/concepts.png (the record sheet)
  *
  * Run with `npm run brand`.
  *
@@ -74,25 +75,39 @@ run(rsvg, [
 ])
 console.log('✓ build/icon.png (1024x1024)')
 
-// ---------------------------------------------------------------- wordmark
+// ------------------------------------------------------- HTML-backed assets
 const chrome = findChrome()
 const magick = which('magick') ?? requireTool('convert', 'brew install imagemagick')
-const wordmarkOut = join(brandDir, 'wordmark.png')
-const scratch = join(brandDir, '.wordmark-raw.png')
 
-run(chrome, [
-  '--headless',
-  '--disable-gpu',
-  '--hide-scrollbars',
-  '--force-device-scale-factor=2',
-  '--default-background-color=00000000',
-  '--window-size=1400,500',
-  `--screenshot=${scratch}`,
-  `file://${join(brandDir, 'wordmark.html')}`
-])
+/**
+ * Screenshot an HTML file at 2x. Chrome paints onto a fixed canvas, so `trim`
+ * crops back to the artwork afterwards — that is what keeps a transparent PNG
+ * exactly the size of what was drawn. Pages that paint their own opaque
+ * background pass `trim: false`, since there is nothing to crop away.
+ */
+function shoot(source, output, { window: windowSize, trim = true }) {
+  const scratch = `${output}.raw.png`
+  run(chrome, [
+    '--headless',
+    '--disable-gpu',
+    '--hide-scrollbars',
+    '--force-device-scale-factor=2',
+    '--default-background-color=00000000',
+    `--window-size=${windowSize}`,
+    `--screenshot=${scratch}`,
+    `file://${source}`
+  ])
+  run(magick, trim ? [scratch, '-trim', '+repage', output] : [scratch, output])
+  rmSync(scratch, { force: true })
+}
 
-// Chrome paints onto a fixed canvas, so trim back to the banner and re-set the
-// page geometry — this is what keeps the PNG exactly the size of the artwork.
-run(magick, [scratch, '-trim', '+repage', wordmarkOut])
-rmSync(scratch, { force: true })
+shoot(join(brandDir, 'wordmark.html'), join(brandDir, 'wordmark.png'), {
+  window: '1400,500'
+})
 console.log('✓ brand/wordmark.png')
+
+shoot(join(brandDir, 'concepts', 'concepts.html'), join(brandDir, 'concepts', 'concepts.png'), {
+  window: '1580,1010',
+  trim: false
+})
+console.log('✓ brand/concepts/concepts.png')

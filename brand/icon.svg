@@ -7,29 +7,34 @@
   `npm run brand` to regenerate build/icon.png, which electron-builder turns
   into the .icns and .ico at package time.
 
-  Keep the 512-unit coordinate system. The dark rounded tile is part of the
-  artwork (the usual choice for apps that aren't Apple-designed); the tile-less
-  version of the mark lives in mark.svg.
+  Keep the 512-unit coordinate system. The pale blue rounded tile is part of
+  the artwork (the usual choice for apps that aren't Apple-designed); the
+  tile-less version of the mark lives in mark.svg.
+
+  On a light tile the sheet cannot be plain white — it would dissolve into the
+  background at 16 px. Its ink-blue outline is what gives it a silhouette, and
+  it costs nothing: the sheet passes through the C's gap without ever crossing
+  the arc, so the outline only ever sits on tile.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1024" height="1024">
   <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1b2130" />
-      <stop offset="1" stop-color="#0a0c11" />
+    <linearGradient id="tile" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#d7e7fa" />
     </linearGradient>
     <linearGradient id="paper" x1="0" y1="0" x2="0.35" y2="1">
       <stop offset="0" stop-color="#ffffff" />
-      <stop offset="1" stop-color="#d7e0f2" />
+      <stop offset="1" stop-color="#f2f7fe" />
     </linearGradient>
     <linearGradient id="blue" x1="0" y1="0" x2="0.4" y2="1">
-      <stop offset="0" stop-color="#6ba2ff" />
-      <stop offset="1" stop-color="#2f6fdd" />
+      <stop offset="0" stop-color="#7ea8ee" />
+      <stop offset="1" stop-color="#2f5aa8" />
     </linearGradient>
   </defs>
 
   <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
   <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
-        stroke="rgba(255,255,255,0.09)" stroke-width="2" />
+        stroke="rgba(47,90,168,0.13)" stroke-width="2" />
 
   <!-- The C: a 260-degree arc, opening to the right. Butt caps, not round —
        the flat ends are what make the gap read as a paper slot. -->
@@ -38,11 +43,13 @@
         fill="none" stroke="url(#blue)" stroke-width="58" />
 
   <!-- The sheet passes through the aperture. Its vertical extent is chosen to
-       clear both stroke ends (y 123-185 and y 327-389), so the C stays whole. -->
-  <rect x="210" y="214" width="232" height="84" rx="19" fill="url(#paper)" />
+       clear both stroke ends (y 123-185 and y 327-389) even once the 13-unit
+       outline is counted, so the C stays whole. -->
+  <rect x="210" y="214" width="232" height="84" rx="19"
+        fill="url(#paper)" stroke="#2f5aa8" stroke-width="13" />
   <!-- Two lines, left-aligned and of unequal length. Centred equal-length lines
        read as an "=" sign rather than as text on a page. -->
-  <g fill="#0b0d12" opacity="0.55">
+  <g fill="#2f5aa8" opacity="0.5">
     <rect x="248" y="238" width="152" height="13" rx="6.5" />
     <rect x="248" y="262" width="100" height="13" rx="6.5" />
   </g>

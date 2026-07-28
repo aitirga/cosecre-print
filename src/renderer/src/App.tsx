@@ -61,17 +61,17 @@ export default function App(): ReactNode {
 
   return (
     <DropTarget>
-      <div className="flex h-full flex-col bg-ink-900">
-        <header className="drag-region flex shrink-0 items-center gap-3 border-b border-ink-800 px-4 py-2.5 pl-20">
+      <div className="flex h-full flex-col bg-mist-100">
+        <header className="drag-region flex shrink-0 items-center gap-3 border-b border-mist-300 bg-mist-50 px-4 py-2.5 pl-20">
           <LogoMark className="size-[19px]" />
-          <span className="text-[13px] font-semibold tracking-tight text-ink-100">Cosecre-print</span>
+          <span className="text-[13px] font-semibold tracking-tight text-ink-900">Cosecre-print</span>
 
           <nav className="ml-4 flex items-center gap-1">
             <TabButton active={view === 'queue'} onClick={() => setView('queue')}>
               <FileIcon className="size-3.5" />
               Queue
               {jobs.length > 0 && (
-                <span className="ml-0.5 rounded bg-ink-700 px-1.5 text-[11px] tabular-nums">
+                <span className="ml-0.5 rounded bg-mist-300 px-1.5 text-[11px] tabular-nums">
                   {jobs.length}
                 </span>
               )}
@@ -85,7 +85,7 @@ export default function App(): ReactNode {
           <div className="flex-1" />
 
           {activeCount > 0 && (
-            <span className="text-[12px] text-accent">
+            <span className="text-[12px] text-accent-700">
               {activeCount} printing concurrently
             </span>
           )}
@@ -108,13 +108,13 @@ export default function App(): ReactNode {
         </header>
 
         {needsConverter && (
-          <div className="flex shrink-0 items-start gap-2 border-b border-amber-500/20 bg-amber-500/10 px-4 py-2 text-[12px] text-amber-200">
+          <div className="flex shrink-0 items-start gap-2 border-b border-peach-200 bg-peach-100 px-4 py-2 text-[12px] text-peach-700">
             <AlertIcon className="mt-0.5 size-4 shrink-0" />
             <span className="flex-1">{converter.reason}</span>
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
-              className="shrink-0 underline underline-offset-2 hover:text-amber-100"
+              className="shrink-0 underline underline-offset-2 hover:no-underline"
             >
               Open settings
             </button>
@@ -126,16 +126,16 @@ export default function App(): ReactNode {
             <HistoryView />
           ) : (
             <>
-              <section className="flex w-80 shrink-0 flex-col border-r border-ink-800">
+              <section className="flex w-80 shrink-0 flex-col border-r border-mist-300">
                 <div className="flex items-center justify-between px-3 py-2">
-                  <span className="text-[11px] font-medium tracking-wide text-ink-400 uppercase">
+                  <span className="text-[11px] font-medium tracking-wide text-ink-500 uppercase">
                     Documents
                   </span>
                   {finishedCount > 0 && (
                     <button
                       type="button"
                       onClick={() => void clearFinished()}
-                      className="text-[11px] text-ink-400 hover:text-ink-200"
+                      className="text-[11px] text-ink-500 hover:text-ink-800"
                     >
                       Clear finished
                     </button>
@@ -150,10 +150,10 @@ export default function App(): ReactNode {
                 <PreviewPane job={selectedJob} />
               </section>
 
-              <section className="w-72 shrink-0 overflow-auto border-l border-ink-800">
+              <section className="w-72 shrink-0 overflow-auto border-l border-mist-300">
                 <PrintSettingsPanel job={selectedJob} />
                 {selectedJob && (
-                  <div className="border-t border-ink-800 p-4">
+                  <div className="border-t border-mist-300 p-4">
                     <Button
                       variant="primary"
                       className="w-full"
@@ -182,10 +182,10 @@ export default function App(): ReactNode {
         {notices.map((notice) => (
           <div
             key={notice.id}
-            className={`pointer-events-auto flex items-start gap-2 rounded-lg border px-3 py-2 text-[12px] shadow-lg ${
+            className={`pointer-events-auto flex items-start gap-2 rounded-lg border px-3 py-2 text-[12px] shadow-lg shadow-ink-900/10 ${
               notice.kind === 'error'
-                ? 'border-rose-500/30 bg-rose-950/90 text-rose-100'
-                : 'border-ink-700 bg-ink-800 text-ink-100'
+                ? 'border-blush-200 bg-blush-100 text-blush-700'
+                : 'border-mist-300 bg-mist-50 text-ink-800'
             }`}
           >
             <span className="flex-1 leading-relaxed">{notice.message}</span>
@@ -218,7 +218,7 @@ function TabButton({
       type="button"
       onClick={onClick}
       className={`no-drag inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors ${
-        active ? 'bg-ink-800 text-ink-100' : 'text-ink-400 hover:text-ink-200'
+        active ? 'bg-mist-200 text-ink-900' : 'text-ink-500 hover:text-ink-800'
       }`}
     >
       {children}
@@ -272,11 +272,11 @@ function DropTarget({ children }: { children: ReactNode }): ReactNode {
       {children}
 
       {dragging && (
-        <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center bg-ink-950/80 backdrop-blur-sm">
-          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-accent/60 px-16 py-12">
-            <FileIcon className="size-10 text-accent" />
-            <p className="text-sm font-medium text-ink-100">Drop to add to the queue</p>
-            <p className="text-[12px] text-ink-400">PDF and Word (.docx) files</p>
+        <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center bg-mist-100/85 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-accent-400 bg-mist-50/70 px-16 py-12">
+            <FileIcon className="size-10 text-accent-500" />
+            <p className="text-sm font-medium text-ink-900">Drop to add to the queue</p>
+            <p className="text-[12px] text-ink-500">PDF and Word (.docx) files</p>
           </div>
         </div>
       )}

@@ -20,7 +20,7 @@ export function PrintSettingsPanel({ job }: { job: Job | undefined }): ReactNode
 
   if (!job) {
     return (
-      <div className="p-4 text-[13px] text-ink-400">
+      <div className="p-4 text-[13px] text-ink-500">
         Select a document to choose its printer and options.
       </div>
     )
@@ -37,13 +37,13 @@ export function PrintSettingsPanel({ job }: { job: Job | undefined }): ReactNode
     <div className="flex flex-col gap-4 p-4">
       <div>
         <div className="mb-1.5 flex items-center justify-between">
-          <span className="text-[11px] font-medium tracking-wide text-ink-400 uppercase">
+          <span className="text-[11px] font-medium tracking-wide text-ink-500 uppercase">
             Printer
           </span>
           <button
             type="button"
             onClick={() => void refreshPrinters()}
-            className="no-drag text-[11px] text-ink-400 hover:text-ink-200"
+            className="no-drag text-[11px] text-ink-500 hover:text-ink-800"
           >
             Refresh
           </button>
@@ -62,7 +62,7 @@ export function PrintSettingsPanel({ job }: { job: Job | undefined }): ReactNode
           ))}
         </Select>
         {printers.length === 0 && (
-          <p className="mt-1.5 text-[11px] text-amber-300">
+          <p className="mt-1.5 text-[11px] text-peach-700">
             No printers found. Add one in your system settings, then press Refresh.
           </p>
         )}
@@ -145,7 +145,7 @@ export function PrintSettingsPanel({ job }: { job: Job | undefined }): ReactNode
       </Button>
 
       {locked && (
-        <p className="text-[11px] leading-relaxed text-ink-400">
+        <p className="text-[11px] leading-relaxed text-ink-500">
           Options are locked once a job has been sent to the printer.
         </p>
       )}

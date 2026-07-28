@@ -19,13 +19,13 @@ export function UpdateSection(): ReactNode {
   const action = primaryAction(update)
 
   return (
-    <div className="border-t border-ink-800 pt-4">
+    <div className="border-t border-mist-300 pt-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <span className="mb-1.5 block text-[11px] font-medium tracking-wide text-ink-400 uppercase">
+          <span className="mb-1.5 block text-[11px] font-medium tracking-wide text-ink-500 uppercase">
             Updates
           </span>
-          <p className="text-[13px] text-ink-200 tabular-nums">
+          <p className="text-[13px] text-ink-800 tabular-nums">
             Version {update.currentVersion}
           </p>
         </div>
@@ -51,14 +51,14 @@ export function UpdateSection(): ReactNode {
 
       {update.phase === 'downloading' && (
         <div
-          className="mt-2 h-1 overflow-hidden rounded-full bg-ink-700"
+          className="mt-2 h-1 overflow-hidden rounded-full bg-mist-300"
           role="progressbar"
           aria-valuenow={update.percent ?? 0}
           aria-valuemin={0}
           aria-valuemax={100}
         >
           <div
-            className="h-full rounded-full bg-accent transition-[width] duration-300"
+            className="h-full rounded-full bg-accent-600 transition-[width] duration-300"
             style={{ width: `${update.percent ?? 0}%` }}
           />
         </div>
@@ -68,9 +68,9 @@ export function UpdateSection(): ReactNode {
 }
 
 const TONE = {
-  good: 'text-emerald-300',
-  warn: 'text-amber-300',
-  plain: 'text-ink-400'
+  good: 'text-mint-700',
+  warn: 'text-peach-700',
+  plain: 'text-ink-500'
 } as const
 
 function toneOf(phase: UpdateState['phase']): keyof typeof TONE {

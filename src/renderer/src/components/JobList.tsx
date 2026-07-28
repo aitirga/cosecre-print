@@ -46,12 +46,12 @@ export function JobList({
               }}
               className={`group w-full cursor-pointer rounded-lg border px-3 py-2.5 text-left transition-colors ${
                 selected
-                  ? 'border-accent/40 bg-accent/10'
-                  : 'border-transparent bg-ink-850 hover:bg-ink-800'
+                  ? 'border-accent-300 bg-accent-50'
+                  : 'border-mist-300 bg-mist-50 hover:border-mist-400 hover:bg-mist-200'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
-                <p className="min-w-0 flex-1 truncate text-[13px] font-medium text-ink-100">
+                <p className="min-w-0 flex-1 truncate text-[13px] font-medium text-ink-900">
                   {job.fileName}
                 </p>
                 <Badge className={STATUS_STYLE[job.status]} pulse={isActive(job.status)}>
@@ -60,7 +60,7 @@ export function JobList({
               </div>
 
               <div className="mt-1 flex items-center justify-between gap-2">
-                <p className="min-w-0 flex-1 truncate text-[11px] text-ink-400">
+                <p className="min-w-0 flex-1 truncate text-[11px] text-ink-500">
                   {job.options.printer || 'No printer'}
                   {' · '}
                   {formatBytes(job.sizeBytes)}
@@ -99,13 +99,13 @@ export function JobList({
               </div>
 
               {job.error && (
-                <p className="mt-1.5 line-clamp-2 rounded bg-rose-500/10 px-2 py-1 text-[11px] text-rose-300">
+                <p className="mt-1.5 line-clamp-2 rounded bg-blush-100 px-2 py-1 text-[11px] text-blush-700">
                   {job.error}
                 </p>
               )}
 
               {job.tracking === 'submitted-only' && job.status === 'completed' && (
-                <p className="mt-1.5 text-[11px] text-ink-400">
+                <p className="mt-1.5 text-[11px] text-ink-500">
                   Sent to the spooler — this platform does not report per-job progress.
                 </p>
               )}

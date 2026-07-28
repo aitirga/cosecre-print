@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow, nativeTheme, shell } from 'electron'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,7 +23,9 @@ function createWindow(): BrowserWindow {
     minHeight: 640,
     show: false,
     title: 'Cosecre-print',
-    backgroundColor: '#0b0d12',
+    // Matches --color-mist-100 in the renderer theme, so the first paint does
+    // not flash a different colour than the UI.
+    backgroundColor: '#f5f9fe',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     webPreferences: {
       preload: join(dirname, '../preload/index.mjs'),
@@ -55,6 +57,12 @@ function createWindow(): BrowserWindow {
 
 app.whenReady().then(async () => {
   app.setName('Cosecre-print')
+
+  // The UI is a single light theme. Pinning the native theme keeps the widgets
+  // Chromium draws itself — `<select>` popups, form controls, the macOS traffic
+  // lights — light too, instead of following a dark system setting and landing
+  // dark-on-white.
+  nativeTheme.themeSource = 'light'
 
   // A packaged build gets its icon from the bundle, but `npm run dev` would
   // otherwise sit in the Dock as a generic Electron diamond.

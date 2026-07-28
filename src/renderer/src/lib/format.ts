@@ -36,17 +36,21 @@ export const STATUS_LABEL: Record<JobStatus, string> = {
   canceled: 'Canceled'
 }
 
-/** Tailwind classes per status, kept in one place so badges stay consistent. */
+/**
+ * Tailwind classes per status, kept in one place so badges stay consistent.
+ * Every pair is a pastel `-100` fill with its matching `-700` text tone, which
+ * is the combination the theme guarantees at 4.5:1.
+ */
 export const STATUS_STYLE: Record<JobStatus, string> = {
-  queued: 'bg-ink-700 text-ink-200',
-  preparing: 'bg-amber-500/15 text-amber-300',
-  ready: 'bg-sky-500/15 text-sky-300',
-  submitting: 'bg-violet-500/15 text-violet-300',
-  spooled: 'bg-violet-500/15 text-violet-300',
-  printing: 'bg-accent/20 text-accent',
-  completed: 'bg-emerald-500/15 text-emerald-300',
-  failed: 'bg-rose-500/15 text-rose-300',
-  canceled: 'bg-ink-700 text-ink-300'
+  queued: 'bg-mist-200 text-ink-600',
+  preparing: 'bg-peach-100 text-peach-700',
+  ready: 'bg-aqua-100 text-aqua-700',
+  submitting: 'bg-lilac-100 text-lilac-700',
+  spooled: 'bg-lilac-100 text-lilac-700',
+  printing: 'bg-accent-100 text-accent-700',
+  completed: 'bg-mint-100 text-mint-700',
+  failed: 'bg-blush-100 text-blush-700',
+  canceled: 'bg-mist-200 text-ink-500'
 }
 
 /** Statuses that should show motion in the UI. */

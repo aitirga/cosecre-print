@@ -1,106 +1,109 @@
 <style>
   :root {
-    --ink-950: #080a0f;
-    --ink-900: #0b0d12;
-    --ink-850: #10131a;
-    --ink-800: #161a23;
-    --ink-700: #1f2532;
-    --ink-400: #6b7689;
-    --ink-300: #8e99ad;
-    --ink-100: #e4e9f2;
-    --accent: #4f8ef7;
+    --mist-50: #fdfeff;
+    --mist-100: #f5f9fe;
+    --mist-200: #edf3fc;
+    --mist-300: #e0eaf8;
+    --mist-400: #cedcf0;
+    --ink-500: #5a7091;
+    --ink-600: #4a5f7f;
+    --ink-900: #1b2c46;
+    --accent-100: #dfeafc;
+    --accent-300: #b3cdf5;
+    --accent-600: #3f6fce;
+    --accent-700: #2f5aa8;
   }
   body {
     margin: 0;
-    background: var(--ink-950);
-    color: var(--ink-100);
+    background: var(--mist-100);
+    color: var(--ink-900);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
   .sheet { padding: 56px 60px 64px; width: 1520px; box-sizing: border-box; }
   h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 6px; }
-  .sub { color: var(--ink-400); font-size: 15px; margin: 0 0 44px; }
+  .sub { color: var(--ink-500); font-size: 15px; margin: 0 0 44px; }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
   .card {
-    background: var(--ink-850);
-    border: 1px solid var(--ink-700);
+    background: var(--mist-50);
+    border: 1px solid var(--mist-300);
     border-radius: 18px;
     padding: 28px 28px 26px;
     position: relative;
   }
-  .card.pick { border-color: rgba(79,142,247,0.55); }
+  .card.pick { border-color: var(--accent-300); }
   .pickflag {
     position: absolute; top: -1px; right: 20px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: #0b0d12; background: var(--accent);
+    color: #ffffff; background: var(--accent-600);
     padding: 5px 10px; border-radius: 0 0 7px 7px;
   }
   .tag {
     display: inline-block;
     font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-    color: var(--accent); background: rgba(79,142,247,0.12);
-    border: 1px solid rgba(79,142,247,0.28);
+    color: var(--accent-700); background: var(--accent-100);
+    border: 1px solid var(--accent-300);
     padding: 4px 9px; border-radius: 6px; margin-bottom: 14px;
   }
   .name { font-size: 21px; font-weight: 600; margin: 0 0 5px; letter-spacing: -0.01em; }
-  .desc { font-size: 13px; line-height: 1.55; color: var(--ink-300); margin: 0 0 22px; min-height: 84px; }
+  .desc { font-size: 13px; line-height: 1.55; color: var(--ink-600); margin: 0 0 22px; min-height: 84px; }
   .hero { display: flex; justify-content: center; margin-bottom: 26px; }
   .sizes {
     display: flex; align-items: flex-end; gap: 22px;
-    padding: 18px 20px; background: var(--ink-900);
-    border: 1px solid var(--ink-800); border-radius: 12px;
+    padding: 18px 20px; background: var(--mist-200);
+    border: 1px solid var(--mist-300); border-radius: 12px;
   }
   .size { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .size span { font-size: 10px; color: var(--ink-400); font-variant-numeric: tabular-nums; }
+  .size span { font-size: 10px; color: var(--ink-500); font-variant-numeric: tabular-nums; }
   .lockup {
-    margin-top: 22px; padding: 20px; background: var(--ink-900);
-    border: 1px solid var(--ink-800); border-radius: 12px;
+    margin-top: 22px; padding: 20px; background: var(--mist-200);
+    border: 1px solid var(--mist-300); border-radius: 12px;
     display: flex; align-items: center; gap: 13px;
   }
   .wordmark { font-size: 26px; letter-spacing: -0.025em; line-height: 1; }
-  .wordmark b { font-weight: 650; color: var(--ink-100); }
-  .wordmark i { font-style: normal; font-weight: 400; color: var(--ink-400); }
-  .note { margin-top: 46px; font-size: 13px; color: var(--ink-400); line-height: 1.6; max-width: 1120px; }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-300); }
+  .wordmark b { font-weight: 650; color: var(--ink-900); }
+  .wordmark i { font-style: normal; font-weight: 400; color: var(--ink-500); }
+  .note { margin-top: 46px; font-size: 13px; color: var(--ink-500); line-height: 1.6; max-width: 1120px; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent-700); }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1b2130" />
-      <stop offset="1" stop-color="#0a0c11" />
+    <linearGradient id="tile" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#d7e7fa" />
     </linearGradient>
     <linearGradient id="paper" x1="0" y1="0" x2="0.35" y2="1">
       <stop offset="0" stop-color="#ffffff" />
-      <stop offset="1" stop-color="#d7e0f2" />
+      <stop offset="1" stop-color="#f2f7fe" />
     </linearGradient>
     <linearGradient id="blue" x1="0" y1="0" x2="0.4" y2="1">
-      <stop offset="0" stop-color="#6ba2ff" />
-      <stop offset="1" stop-color="#2f6fdd" />
+      <stop offset="0" stop-color="#7ea8ee" />
+      <stop offset="1" stop-color="#2f5aa8" />
     </linearGradient>
     <linearGradient id="blueDeep" x1="0" y1="0" x2="0.4" y2="1">
-      <stop offset="0" stop-color="#3f74c8" />
-      <stop offset="1" stop-color="#24518f" />
+      <stop offset="0" stop-color="#5b8de6" />
+      <stop offset="1" stop-color="#23457e" />
     </linearGradient>
 
     <!-- ===== 1. BATCH — a wide fan of sheets feeding one slot ==================== -->
     <symbol id="c1" viewBox="0 0 512 512">
       <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
       <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
-            stroke="rgba(255,255,255,0.09)" stroke-width="2" />
-      <!-- the dark separation stroke is load-bearing: without it the fanned
+            stroke="rgba(47,90,168,0.13)" stroke-width="2" />
+      <!-- the ink-blue separation stroke is load-bearing: without it the fanned
            sheets merge into one blob as soon as the icon is downsampled -->
       <g transform="rotate(-24 256 470)">
         <rect x="186" y="150" width="140" height="250" rx="16"
-              fill="url(#blueDeep)" stroke="#0c0f16" stroke-width="11" />
+              fill="url(#blueDeep)" stroke="#2f5aa8" stroke-width="11" />
       </g>
       <g transform="rotate(24 256 470)">
         <rect x="186" y="150" width="140" height="250" rx="16"
-              fill="url(#blue)" stroke="#0c0f16" stroke-width="11" />
+              fill="url(#blue)" stroke="#2f5aa8" stroke-width="11" />
       </g>
       <rect x="186" y="150" width="140" height="250" rx="16"
-            fill="url(#paper)" stroke="#0c0f16" stroke-width="11" />
-      <g fill="#0b0d12" opacity="0.82">
+            fill="url(#paper)" stroke="#2f5aa8" stroke-width="11" />
+      <g fill="#2f5aa8" opacity="0.8">
         <rect x="214" y="192" width="84" height="15" rx="7.5" />
         <rect x="214" y="226" width="84" height="15" rx="7.5" />
         <rect x="214" y="260" width="54" height="15" rx="7.5" />
@@ -112,12 +115,13 @@
     <symbol id="c2" viewBox="0 0 512 512">
       <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
       <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
-            stroke="rgba(255,255,255,0.09)" stroke-width="2" />
+            stroke="rgba(47,90,168,0.13)" stroke-width="2" />
       <path d="M 329.7 350.9 A 132 132 0 1 1 329.7 161.1"
             transform="translate(-8 0)"
             fill="none" stroke="url(#blue)" stroke-width="58" />
-      <rect x="210" y="214" width="232" height="84" rx="19" fill="url(#paper)" />
-      <g fill="#0b0d12" opacity="0.55">
+      <rect x="210" y="214" width="232" height="84" rx="19"
+            fill="url(#paper)" stroke="#2f5aa8" stroke-width="13" />
+      <g fill="#2f5aa8" opacity="0.5">
         <rect x="326" y="239" width="94" height="13" rx="6.5" />
         <rect x="326" y="264" width="62" height="13" rx="6.5" />
       </g>
@@ -127,15 +131,18 @@
     <symbol id="c3" viewBox="0 0 512 512">
       <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#tile)" />
       <rect x="16" y="16" width="480" height="480" rx="112" fill="none"
-            stroke="rgba(255,255,255,0.09)" stroke-width="2" />
+            stroke="rgba(47,90,168,0.13)" stroke-width="2" />
       <g transform="translate(-30 -16)">
-        <rect x="138" y="104" width="200" height="272" rx="24" fill="url(#paper)" />
-        <g fill="#0b0d12" opacity="0.78">
+        <rect x="138" y="104" width="200" height="272" rx="24"
+              fill="url(#paper)" stroke="#2f5aa8" stroke-width="13" />
+        <g fill="#2f5aa8" opacity="0.75">
           <rect x="172" y="152" width="132" height="16" rx="8" />
           <rect x="172" y="192" width="132" height="16" rx="8" />
           <rect x="172" y="232" width="88" height="16" rx="8" />
         </g>
-        <circle cx="352" cy="356" r="86" fill="url(#blue)" stroke="#0c0f16" stroke-width="15" />
+        <!-- knockout ring in tile-white: the light-theme equivalent of a dark
+             separation stroke, and the only thing keeping the badge off the sheet -->
+        <circle cx="352" cy="356" r="86" fill="url(#blue)" stroke="#fdfeff" stroke-width="15" />
         <g fill="none" stroke="#ffffff" stroke-width="21" stroke-linecap="round"
            stroke-linejoin="round">
           <path d="M 317 326 L 347 356 L 317 386" />
@@ -148,7 +155,7 @@
 
 <div class="sheet">
   <h1>Cosecre-print — logo concepts</h1>
-  <p class="sub">Same palette as the app (accent&nbsp;#4f8ef7 on ink&nbsp;#0b0d12). Shown full size and at the
+  <p class="sub">Same palette as the app (accent&nbsp;#2f5aa8 on a pale blue tile). Shown full size and at the
     sizes that actually decide it: 64&nbsp;px Dock, 32&nbsp;px taskbar, 16&nbsp;px title bar.</p>
 
   <div class="grid">
@@ -193,7 +200,7 @@
       <span class="tag">Concept 3</span>
       <p class="name">Momentum</p>
       <p class="desc">A document with a throughput badge — the base-object-plus-accent-badge pattern
-        most utility apps use. Very legible small (white sheet, blue dot), but the chevrons say
+        most utility apps use. Very legible small (outlined sheet, blue dot), but the chevrons say
         “fast”, not specifically “print”.</p>
       <div class="hero"><svg width="228" height="228"><use href="#c3" width="228" height="228" /></svg></div>
       <div class="sizes">
@@ -209,7 +216,9 @@
   </div>
 
   <p class="note">All three are pure vector with no hairlines, so they survive macOS downsampling the
-    1024&nbsp;px master into an .icns and Windows into an .ico. The dark rounded tile is baked into the
-    artwork, which is the usual choice for apps that aren’t Apple-designed. Switching the shipped mark
-    to another concept is a one-file change — <code>brand/icon.svg</code>, then <code>npm run brand</code>.</p>
+    1024&nbsp;px master into an .icns and Windows into an .ico. The pale blue rounded tile is baked into
+    the artwork, which is the usual choice for apps that aren’t Apple-designed. On a light tile the sheet
+    carries an ink-blue outline — plain white would dissolve into the background at 16&nbsp;px. Switching
+    the shipped mark to another concept is a one-file change — <code>brand/icon.svg</code>, then
+    <code>npm run brand</code>.</p>
 </div>

@@ -31,17 +31,17 @@ export function SettingsDialog(): ReactNode {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/25 p-6 backdrop-blur-sm"
       onClick={() => setOpen(false)}
     >
       <div
         role="dialog"
         aria-label="Settings"
-        className="w-full max-w-lg rounded-xl border border-ink-700 bg-ink-850 shadow-2xl"
+        className="w-full max-w-lg rounded-xl border border-mist-300 bg-mist-50 shadow-2xl shadow-ink-900/20"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-ink-800 px-5 py-3">
-          <h2 className="text-sm font-semibold text-ink-100">Settings</h2>
+        <div className="flex items-center justify-between border-b border-mist-300 px-5 py-3">
+          <h2 className="text-sm font-semibold text-ink-900">Settings</h2>
           <Button aria-label="Close" className="px-1.5 py-1" onClick={() => setOpen(false)}>
             <CloseIcon className="size-4" />
           </Button>
@@ -73,7 +73,7 @@ export function SettingsDialog(): ReactNode {
             </Field>
             <p
               className={`mt-1.5 text-[11px] leading-relaxed ${
-                converter?.available ? 'text-emerald-300' : 'text-amber-300'
+                converter?.available ? 'text-mint-700' : 'text-peach-700'
               }`}
             >
               {converter?.available
@@ -112,7 +112,7 @@ export function SettingsDialog(): ReactNode {
             </Field>
           </div>
 
-          <p className="text-[11px] leading-relaxed text-ink-400">
+          <p className="text-[11px] leading-relaxed text-ink-500">
             Word documents are converted to PDF with LibreOffice before printing, so the preview
             matches the printed output exactly.
           </p>

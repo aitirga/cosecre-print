@@ -1,19 +1,62 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-ink-950: #080a0f;
-  --color-ink-900: #0b0d12;
-  --color-ink-850: #10131a;
-  --color-ink-800: #161a23;
-  --color-ink-700: #1f2532;
-  --color-ink-600: #2b3342;
-  --color-ink-400: #6b7689;
-  --color-ink-300: #8e99ad;
-  --color-ink-200: #b8c1d1;
-  --color-ink-100: #e4e9f2;
+/*
+  Cosecre-print theme — a light, blue-tinted palette.
 
-  --color-accent: #4f8ef7;
-  --color-accent-soft: #1d3157;
+  Three families, all numbered the conventional way (low = light, high = dark):
+
+    mist-*    blue-tinted white surfaces. mist-100 is the app background,
+              mist-50 the raised surfaces on top of it (header, cards, inputs).
+    ink-*     text tones. Every step clears 4.5:1 on mist-100, so any of them
+              is safe for 11 px labels.
+    accent-*  the brand blue. 400/500 are for graphics, 600 for filled
+              buttons (4.8:1 with white), 700 for accent *text*.
+
+  The status hues (mint/aqua/peach/blush/lilac) come in pairs: `-100` is a
+  pastel fill and `-700` is the text tone that clears 4.5:1 on it. They are
+  deliberately named off the Tailwind defaults — declaring only two steps of
+  `sky` or `emerald` would leave the rest of those scales on stock values and
+  mixing them would break the pastel cast.
+*/
+@theme {
+  --color-mist-50: #fdfeff;
+  --color-mist-100: #f5f9fe;
+  --color-mist-200: #edf3fc;
+  --color-mist-300: #e0eaf8;
+  --color-mist-400: #cedcf0;
+  --color-mist-500: #b3c6e2;
+
+  --color-ink-500: #5a7091;
+  --color-ink-600: #4a5f7f;
+  --color-ink-800: #2f4361;
+  --color-ink-900: #1b2c46;
+
+  --color-accent-50: #eff5fe;
+  --color-accent-100: #dfeafc;
+  --color-accent-200: #cbdcf9;
+  --color-accent-300: #b3cdf5;
+  --color-accent-400: #7ea8ee;
+  --color-accent-500: #5b8de6;
+  --color-accent-600: #3f6fce;
+  --color-accent-700: #2f5aa8;
+
+  --color-mint-100: #e3f6ec;
+  --color-mint-200: #c7ebd7;
+  --color-mint-700: #1d7a51;
+
+  --color-aqua-100: #dff4f6;
+  --color-aqua-700: #10707d;
+
+  --color-peach-100: #fdf1de;
+  --color-peach-200: #f7ddb4;
+  --color-peach-700: #8a5a12;
+
+  --color-blush-100: #fdeaee;
+  --color-blush-200: #f8ccd5;
+  --color-blush-700: #a63549;
+
+  --color-lilac-100: #eeeafd;
+  --color-lilac-700: #5b46b0;
 }
 
 @layer base {
@@ -25,13 +68,18 @@
 
   body {
     margin: 0;
-    background-color: var(--color-ink-900);
-    color: var(--color-ink-100);
+    background-color: var(--color-mist-100);
+    color: var(--color-ink-900);
     font-family:
       -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
+  }
+
+  ::selection {
+    background: var(--color-accent-100);
+    color: var(--color-ink-900);
   }
 
   /* The window uses a hidden inset title bar on macOS; this strip gives the
@@ -54,12 +102,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-ink-700);
+    background: var(--color-mist-400);
     border-radius: 999px;
-    border: 2px solid var(--color-ink-900);
+    border: 2px solid var(--color-mist-100);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-ink-600);
+    background: var(--color-mist-500);
   }
 }

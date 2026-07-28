@@ -3,10 +3,18 @@ import type { ButtonHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'reac
 type ButtonVariant = 'primary' | 'ghost' | 'danger'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-accent text-white hover:bg-accent/85 disabled:bg-ink-700 disabled:text-ink-400',
-  ghost: 'bg-ink-800 text-ink-200 hover:bg-ink-700 disabled:text-ink-400',
-  danger: 'bg-transparent text-rose-300 hover:bg-rose-500/10 disabled:text-ink-400'
+  // The `disabled:hover:` pairs are deliberate: CSS `:hover` still matches a
+  // disabled button, so the plain hover colour has to be stacked out of the way
+  // rather than left to variant ordering.
+  primary:
+    'bg-accent-600 text-white shadow-sm shadow-accent-600/25 hover:bg-accent-700 disabled:bg-mist-300 disabled:hover:bg-mist-300 disabled:text-ink-500 disabled:shadow-none',
+  ghost:
+    'bg-mist-200 text-ink-800 hover:bg-mist-300 disabled:hover:bg-mist-200 disabled:text-ink-500',
+  danger: 'bg-transparent text-blush-700 hover:bg-blush-100 disabled:text-ink-500'
 }
+
+/** Shared focus treatment: a soft pastel halo instead of the platform ring. */
+const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
@@ -16,7 +24,7 @@ export function Button({ variant = 'ghost', className = '', ...rest }: ButtonPro
   return (
     <button
       {...rest}
-      className={`no-drag inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors disabled:cursor-not-allowed ${BUTTON_VARIANTS[variant]} ${className}`}
+      className={`no-drag inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors disabled:cursor-not-allowed ${FOCUS_RING} ${BUTTON_VARIANTS[variant]} ${className}`}
     />
   )
 }
@@ -24,7 +32,7 @@ export function Button({ variant = 'ghost', className = '', ...rest }: ButtonPro
 export function Field({ label, children }: { label: string; children: ReactNode }): ReactNode {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[11px] font-medium tracking-wide text-ink-400 uppercase">
+      <span className="mb-1.5 block text-[11px] font-medium tracking-wide text-ink-500 uppercase">
         {label}
       </span>
       {children}
@@ -32,25 +40,18 @@ export function Field({ label, children }: { label: string; children: ReactNode 
   )
 }
 
+const INPUT_BASE =
+  'w-full rounded-md border border-mist-400 bg-mist-50 px-2.5 py-2 text-[13px] text-ink-900 outline-none transition-colors focus:border-accent-500 focus:ring-2 focus:ring-accent-100 disabled:bg-mist-200 disabled:text-ink-500'
+
 export function Select({ className = '', ...rest }: SelectHTMLAttributes<HTMLSelectElement>): ReactNode {
-  return (
-    <select
-      {...rest}
-      className={`w-full rounded-md border border-ink-700 bg-ink-850 px-2.5 py-2 text-[13px] text-ink-100 outline-none focus:border-accent disabled:text-ink-400 ${className}`}
-    />
-  )
+  return <select {...rest} className={`${INPUT_BASE} ${className}`} />
 }
 
 export function TextInput({
   className = '',
   ...rest
 }: React.InputHTMLAttributes<HTMLInputElement>): ReactNode {
-  return (
-    <input
-      {...rest}
-      className={`w-full rounded-md border border-ink-700 bg-ink-850 px-2.5 py-2 text-[13px] text-ink-100 outline-none placeholder:text-ink-400 focus:border-accent ${className}`}
-    />
-  )
+  return <input {...rest} className={`${INPUT_BASE} placeholder:text-ink-500 ${className}`} />
 }
 
 export function Badge({
@@ -83,9 +84,9 @@ export function EmptyState({
 }): ReactNode {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
-      {icon && <div className="mb-1 text-ink-600">{icon}</div>}
-      <p className="text-sm font-medium text-ink-200">{title}</p>
-      {hint && <p className="max-w-xs text-[13px] leading-relaxed text-ink-400">{hint}</p>}
+      {icon && <div className="mb-1 text-accent-300">{icon}</div>}
+      <p className="text-sm font-medium text-ink-800">{title}</p>
+      {hint && <p className="max-w-xs text-[13px] leading-relaxed text-ink-500">{hint}</p>}
     </div>
   )
 }

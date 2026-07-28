@@ -124,6 +124,10 @@ turns into the `.icns` and `.ico`; regenerate it from the SVG with:
 npm run brand
 ```
 
+The UI is a single light theme — blue-tinted white surfaces (`mist-*`), pastel status hues, and one
+brand blue — defined in [`src/renderer/src/styles.css`](src/renderer/src/styles.css). The icon draws
+from the same palette, so changing the blue in one place means changing it in both.
+
 ## How it works
 
 ```

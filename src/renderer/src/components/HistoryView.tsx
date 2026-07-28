@@ -27,7 +27,7 @@ export function HistoryView(): ReactNode {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex items-center gap-2 border-b border-ink-800 px-4 py-2.5">
+      <div className="flex items-center gap-2 border-b border-mist-300 px-4 py-2.5">
         <TextInput
           placeholder="Search by file or printer…"
           value={query}
@@ -45,7 +45,7 @@ export function HistoryView(): ReactNode {
           <option value="canceled">Canceled</option>
         </Select>
         <div className="flex-1" />
-        <span className="text-[12px] text-ink-400">
+        <span className="text-[12px] text-ink-500">
           {filtered.length} of {history.length}
         </span>
         <Button
@@ -70,8 +70,8 @@ export function HistoryView(): ReactNode {
       ) : (
         <div className="min-h-0 flex-1 overflow-auto">
           <table className="w-full border-collapse text-[13px]">
-            <thead className="sticky top-0 bg-ink-900">
-              <tr className="border-b border-ink-800 text-left text-[11px] tracking-wide text-ink-400 uppercase">
+            <thead className="sticky top-0 bg-mist-100">
+              <tr className="border-b border-mist-300 text-left text-[11px] tracking-wide text-ink-500 uppercase">
                 <th className="px-4 py-2 font-medium">Document</th>
                 <th className="px-3 py-2 font-medium">Printer</th>
                 <th className="px-3 py-2 font-medium">Settings</th>
@@ -82,30 +82,30 @@ export function HistoryView(): ReactNode {
             </thead>
             <tbody>
               {filtered.map((entry) => (
-                <tr key={`${entry.id}-${entry.finishedAt}`} className="border-b border-ink-850">
+                <tr key={`${entry.id}-${entry.finishedAt}`} className="border-b border-mist-200">
                   <td className="max-w-64 px-4 py-2.5">
-                    <p className="truncate text-ink-100" title={entry.sourcePath}>
+                    <p className="truncate text-ink-900" title={entry.sourcePath}>
                       {entry.fileName}
                     </p>
-                    <p className="text-[11px] text-ink-400">
+                    <p className="text-[11px] text-ink-500">
                       {formatBytes(entry.sizeBytes)}
                       {entry.pageCount ? ` · ${entry.pageCount} pages` : ''}
                     </p>
                     {entry.error && (
-                      <p className="mt-1 line-clamp-2 text-[11px] text-rose-300">{entry.error}</p>
+                      <p className="mt-1 line-clamp-2 text-[11px] text-blush-700">{entry.error}</p>
                     )}
                   </td>
-                  <td className="max-w-48 truncate px-3 py-2.5 text-ink-300">{entry.printer}</td>
-                  <td className="px-3 py-2.5 text-[12px] text-ink-400">
+                  <td className="max-w-48 truncate px-3 py-2.5 text-ink-600">{entry.printer}</td>
+                  <td className="px-3 py-2.5 text-[12px] text-ink-500">
                     {entry.copies > 1 ? `×${entry.copies} · ` : ''}
                     {entry.pages || 'all'}
                     {entry.duplex !== 'simplex' ? ' · duplex' : ''}
                     {entry.color === 'monochrome' ? ' · b&w' : ''}
                   </td>
-                  <td className="px-3 py-2.5 whitespace-nowrap text-ink-300">
+                  <td className="px-3 py-2.5 whitespace-nowrap text-ink-600">
                     {formatTime(entry.finishedAt)}
                   </td>
-                  <td className="px-3 py-2.5 tabular-nums text-ink-300">
+                  <td className="px-3 py-2.5 tabular-nums text-ink-600">
                     {formatDuration(entry.durationMs)}
                   </td>
                   <td className="px-3 py-2.5">
