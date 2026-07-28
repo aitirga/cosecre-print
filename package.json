@@ -1,6 +1,6 @@
 {
   "name": "cosecre-print",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Concurrent local print manager for PDF and Word documents",
   "main": "./out/main/index.js",
   "author": "aitirga",

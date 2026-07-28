@@ -25,7 +25,7 @@ export class WindowsDriver implements PrintDriver {
   readonly #tracked = new Map<string, TrackedWindowsJob>()
 
   async listPrinters(): Promise<PrinterInfo[]> {
-    const { getPrinters, getDefaultPrinter } = await import('pdf-to-printer')
+    const { getPrinters, getDefaultPrinter } = await loadPdfToPrinter()
     const [printers, fallback] = await Promise.all([
       getPrinters().catch(() => []),
       getDefaultPrinter().catch(() => null)
@@ -40,7 +40,7 @@ export class WindowsDriver implements PrintDriver {
   }
 
   async submit(pdfPath: string, options: PrintOptions, jobTitle: string): Promise<SubmitResult> {
-    const { print } = await import('pdf-to-printer')
+    const { print } = await loadPdfToPrinter()
 
     await print(pdfPath, {
       printer: options.printer,
@@ -115,6 +115,18 @@ export class WindowsDriver implements PrintDriver {
         `Remove-PrintJob`
     ).catch(() => undefined)
   }
+}
+
+/**
+ * `pdf-to-printer` publishes a CommonJS bundle while advertising named
+ * TypeScript exports. Native ESM therefore exposes the runtime API under
+ * `default`, although bundlers may synthesize the named exports. Support both
+ * shapes so the packaged Electron app behaves like the type declarations.
+ */
+async function loadPdfToPrinter(): Promise<typeof import('pdf-to-printer')> {
+  const module = await import('pdf-to-printer')
+  if ('print' in module) return module
+  return (module as unknown as { default: typeof import('pdf-to-printer') }).default
 }
 
 interface SpoolerJob {
