@@ -31,7 +31,11 @@ async function detectSelfInstall(): Promise<boolean> {
 
   // …/Cosecre-print.app/Contents/MacOS/Cosecre-print → …/Cosecre-print.app
   const bundle = resolve(dirname(process.execPath), '..', '..')
-  const result = await tryRun('/usr/bin/codesign', ['-dv', '--verbose=2', bundle])
+  // Startup waits on this, so it gets a tight leash rather than the 15s default.
+  // A local bundle takes well under a second; anything slower is a hang.
+  const result = await tryRun('/usr/bin/codesign', ['-dv', '--verbose=2', bundle], {
+    timeoutMs: 5_000
+  })
 
   // codesign writes its report to stderr, and exits non-zero (so tryRun yields
   // null) when the bundle is not signed at all. An ad-hoc signature exits zero
@@ -83,7 +87,10 @@ export class Updater {
 
     autoUpdater.autoDownload = canSelfInstall
     autoUpdater.autoInstallOnAppQuit = canSelfInstall
-    autoUpdater.logger = null
+    // Silent by default — a failed update check is not the user's problem. Set
+    // COSECRE_UPDATER_DEBUG=1 to trace the feed request when diagnosing why a
+    // release is or is not being offered.
+    autoUpdater.logger = process.env['COSECRE_UPDATER_DEBUG'] ? console : null
 
     autoUpdater.on('checking-for-update', () => this.patch({ phase: 'checking' }))
 
