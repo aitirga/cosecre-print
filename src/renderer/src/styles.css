@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink-950: #080a0f;
+  --color-ink-900: #0b0d12;
+  --color-ink-850: #10131a;
+  --color-ink-800: #161a23;
+  --color-ink-700: #1f2532;
+  --color-ink-600: #2b3342;
+  --color-ink-400: #6b7689;
+  --color-ink-300: #8e99ad;
+  --color-ink-200: #b8c1d1;
+  --color-ink-100: #e4e9f2;
+
+  --color-accent: #4f8ef7;
+  --color-accent-soft: #1d3157;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-ink-900);
+    color: var(--color-ink-100);
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* The window uses a hidden inset title bar on macOS; this strip gives the
+     user somewhere to grab. */
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-700);
+    border-radius: 999px;
+    border: 2px solid var(--color-ink-900);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-600);
+  }
+}

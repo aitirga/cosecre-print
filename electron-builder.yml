@@ -1,0 +1,39 @@
+appId: dev.aitirga.cosecre-print
+productName: Cosecre-print
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - out/**
+  - package.json
+
+# pdf-to-printer ships a SumatraPDF executable that has to exist on disk as a
+# real file — it cannot be launched from inside the asar archive.
+asarUnpack:
+  - node_modules/pdf-to-printer/**
+
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  category: public.app-category.utilities
+  # Unsigned build: without this, macOS refuses to run the bundle at all.
+  identity: null
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+
+linux:
+  target:
+    - AppImage
+  category: Utility
