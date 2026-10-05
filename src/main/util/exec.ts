@@ -42,11 +42,26 @@ export async function tryRun(
   }
 }
 
-/** Run a PowerShell command on Windows. */
+/**
+ * Run a PowerShell command on Windows.
+ *
+ * PowerShell writes to a pipe in the console's OEM code page (850 on a Spanish
+ * install), while Node decodes stdout as UTF-8. Any printer name with an accent
+ * — "Recepción", "Administración" — would come back mangled, and a mangled name
+ * is one the spooler has never heard of. Forcing UTF-8 output keeps names
+ * byte-exact.
+ */
 export async function runPowerShell(script: string, timeoutMs = 15_000): Promise<ExecResult> {
   return run(
     'powershell.exe',
-    ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', script],
+    [
+      '-NoProfile',
+      '-NonInteractive',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-Command',
+      `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; ${script}`
+    ],
     { timeoutMs }
   )
 }

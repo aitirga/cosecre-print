@@ -6,12 +6,14 @@ import { PreviewPane } from './components/PreviewPane'
 import { PrintSettingsPanel } from './components/PrintSettingsPanel'
 import { HistoryView } from './components/HistoryView'
 import { SettingsDialog } from './components/SettingsDialog'
+import { LogsDialog } from './components/LogsDialog'
 import { Button } from './components/ui'
 import {
   AlertIcon,
   CloseIcon,
   FileIcon,
   HistoryIcon,
+  LogsIcon,
   PlusIcon,
   PrinterIcon,
   SettingsIcon
@@ -31,6 +33,7 @@ export default function App(): ReactNode {
   const printJobs = useApp((s) => s.printJobs)
   const clearFinished = useApp((s) => s.clearFinished)
   const setSettingsOpen = useApp((s) => s.setSettingsOpen)
+  const setLogsOpen = useApp((s) => s.setLogsOpen)
   const converter = useApp((s) => s.converter)
 
   useEffect(() => {
@@ -101,6 +104,10 @@ export default function App(): ReactNode {
           >
             <PrinterIcon className="size-3.5" />
             Print {printable.length > 0 ? `all (${printable.length})` : 'all'}
+          </Button>
+          <Button onClick={() => setLogsOpen(true)}>
+            <LogsIcon className="size-3.5" />
+            Logs
           </Button>
           <Button aria-label="Settings" className="px-2" onClick={() => setSettingsOpen(true)}>
             <SettingsIcon className="size-4" />
@@ -177,6 +184,7 @@ export default function App(): ReactNode {
       </div>
 
       <SettingsDialog />
+      <LogsDialog />
 
       <div className="pointer-events-none fixed right-4 bottom-4 z-40 flex w-80 flex-col gap-2">
         {notices.map((notice) => (

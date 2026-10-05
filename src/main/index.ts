@@ -8,8 +8,15 @@ import { Scheduler } from './queue/scheduler.js'
 import { HistoryStore } from './store/history.js'
 import { SettingsStore } from './store/settings.js'
 import { Updater } from './updater.js'
+import { logEnvironment, runDiagnostics } from './diagnostics.js'
+import { initLog, log } from './util/log.js'
 
 const dirname = fileURLToPath(new URL('.', import.meta.url))
+
+// Monitor only: unlike `uncaughtException`, this does not replace Electron's
+// own crash handling.
+process.on('uncaughtExceptionMonitor', (error) => log.error('Uncaught exception', error))
+process.on('unhandledRejection', (reason) => log.error('Unhandled promise rejection', reason))
 
 let mainWindow: BrowserWindow | null = null
 let scheduler: Scheduler | null = null
@@ -72,6 +79,8 @@ app.whenReady().then(async () => {
   }
 
   const userData = app.getPath('userData')
+  initLog(join(userData, 'logs'))
+  logEnvironment()
   const settings = new SettingsStore(userData)
   const history = new HistoryStore(userData)
 
@@ -99,6 +108,11 @@ app.whenReady().then(async () => {
   })
 
   mainWindow = createWindow()
+
+  // Every log a user sends in should already describe their printers, without
+  // them having to know to press anything. Delayed so it never competes with
+  // the window's first paint.
+  setTimeout(() => void runDiagnostics(), 3_000)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow()

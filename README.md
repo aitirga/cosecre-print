@@ -144,7 +144,7 @@ print path, and a preview that cannot drift from the printed output.
 | Platform | Submission | Tracking |
 |---|---|---|
 | macOS / Linux | `lp` (CUPS) | `lpstat` polling with the real CUPS job id |
-| Windows | `pdf-to-printer` (SumatraPDF engine) | `Get-PrintJob`, matched on document name |
+| Windows | SumatraPDF (bundled by `pdf-to-printer`), run directly | `Get-PrintJob`, matched on document name |
 
 Both use the same `PrintDriver` interface (`src/main/printing/driver.ts`), and neither needs a
 native module — the whole app compiles without `electron-rebuild`, which is what keeps
@@ -152,6 +152,20 @@ cross-platform packaging simple.
 
 `lp` is invoked with an explicit argv array rather than a shell string, so filenames containing
 spaces or apostrophes (`John's report.pdf`) print correctly.
+
+On Windows, SumatraPDF is launched from `app.asar.unpacked` with a timeout, so a driver stuck on
+an invisible prompt fails the job instead of blocking that printer's queue. PowerShell output is
+forced to UTF-8, so printer names with accents (`Recepción`) reach the spooler intact.
+
+### Logs
+
+The **Logs** button in the header shows the diagnostic log: environment, printers and their state,
+every print job's lifecycle, and exactly what was handed to the spooler and what it answered. A
+printer snapshot is logged at startup and again on **Check printers**. To debug a machine you
+cannot reach, ask the user to print once and then **Copy** or **Save…** the log.
+
+The files live in `<userData>/logs/` (`cosecre-print.log`, rotated to `cosecre-print.old.log` at
+1 MB).
 
 ### Concurrency
 

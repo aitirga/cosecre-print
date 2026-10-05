@@ -29,12 +29,14 @@ interface AppState {
   selectedJobId: string | null
   view: View
   settingsOpen: boolean
+  logsOpen: boolean
   notices: Notice[]
 
   init(): Promise<void>
   select(jobId: string | null): void
   setView(view: View): void
   setSettingsOpen(open: boolean): void
+  setLogsOpen(open: boolean): void
 
   addPaths(paths: string[]): Promise<void>
   pickFiles(): Promise<void>
@@ -70,6 +72,7 @@ export const useApp = create<AppState>((set, get) => ({
   selectedJobId: null,
   view: 'queue',
   settingsOpen: false,
+  logsOpen: false,
   notices: [],
 
   async init() {
@@ -111,6 +114,7 @@ export const useApp = create<AppState>((set, get) => ({
   select: (selectedJobId) => set({ selectedJobId }),
   setView: (view) => set({ view }),
   setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
+  setLogsOpen: (logsOpen) => set({ logsOpen }),
 
   async addPaths(paths) {
     if (paths.length === 0) return

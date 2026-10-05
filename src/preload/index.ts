@@ -55,6 +55,12 @@ const api: CosecrePrintApi = {
   checkForUpdates: () => ipcRenderer.invoke(IPC.checkForUpdates) as Promise<UpdateState>,
   applyUpdate: () => ipcRenderer.invoke(IPC.applyUpdate) as Promise<void>,
 
+  getLogs: () => ipcRenderer.invoke(IPC.getLogs) as Promise<string>,
+  clearLogs: () => ipcRenderer.invoke(IPC.clearLogs) as Promise<void>,
+  saveLogs: () => ipcRenderer.invoke(IPC.saveLogs) as Promise<string | null>,
+  openLogsFolder: () => ipcRenderer.invoke(IPC.openLogsFolder) as Promise<void>,
+  runDiagnostics: () => ipcRenderer.invoke(IPC.runDiagnostics) as Promise<void>,
+
   onJobUpdate: (cb) => {
     const listener = (_event: unknown, jobs: Job[]): void => cb(jobs)
     ipcRenderer.on(IPC.jobsChanged, listener)

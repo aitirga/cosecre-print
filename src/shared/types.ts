@@ -222,6 +222,15 @@ export interface CosecrePrintApi {
   /** Restart into the new version, or open the release page where that is not possible. */
   applyUpdate(): Promise<void>
 
+  /** The app's diagnostic log, oldest line first. */
+  getLogs(): Promise<string>
+  clearLogs(): Promise<void>
+  /** Ask where to save a copy of the log. Resolves to the path, or null if cancelled. */
+  saveLogs(): Promise<string | null>
+  openLogsFolder(): Promise<void>
+  /** Append a snapshot of the print setup to the log. */
+  runDiagnostics(): Promise<void>
+
   /** Fires on every job state transition. Returns an unsubscribe function. */
   onJobUpdate(cb: (jobs: Job[]) => void): () => void
   onHistoryUpdate(cb: (history: HistoryEntry[]) => void): () => void

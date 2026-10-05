@@ -1,4 +1,6 @@
-import { BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { IPC } from '@shared/ipc'
 import type { AddFilesResult, PrintOptions, Settings } from '@shared/types'
 import { getDriver } from './printing/driver.js'
@@ -7,6 +9,8 @@ import type { HistoryStore } from './store/history.js'
 import type { SettingsStore } from './store/settings.js'
 import { resolveLibreOffice } from './convert/libreoffice.js'
 import type { Updater } from './updater.js'
+import { clearLogs, log, logDir, readLogs } from './util/log.js'
+import { runDiagnostics } from './diagnostics.js'
 
 export interface IpcContext {
   scheduler: Scheduler
@@ -23,7 +27,12 @@ export function registerIpc(ctx: IpcContext): void {
 
   const loadPrinters = async (): Promise<typeof printerCache> => {
     const driver = await getDriver()
-    printerCache = await driver.listPrinters()
+    try {
+      printerCache = await driver.listPrinters()
+    } catch (error) {
+      log.error('Listing printers failed', error)
+      throw error
+    }
     return printerCache
   }
 
@@ -93,6 +102,29 @@ export function registerIpc(ctx: IpcContext): void {
   ipcMain.handle(IPC.getUpdateState, () => updater.get())
   ipcMain.handle(IPC.checkForUpdates, () => updater.check())
   ipcMain.handle(IPC.applyUpdate, () => updater.apply())
+
+  ipcMain.handle(IPC.getLogs, () => readLogs())
+  ipcMain.handle(IPC.clearLogs, () => clearLogs())
+  ipcMain.handle(IPC.runDiagnostics, () => runDiagnostics())
+  ipcMain.handle(IPC.openLogsFolder, async () => {
+    const dir = logDir()
+    if (dir) await shell.openPath(dir)
+  })
+  ipcMain.handle(IPC.saveLogs, async (): Promise<string | null> => {
+    const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')
+    const options: Electron.SaveDialogOptions = {
+      title: 'Save logs',
+      defaultPath: join(app.getPath('desktop'), `cosecre-print-logs-${stamp}.txt`),
+      filters: [{ name: 'Text', extensions: ['txt'] }]
+    }
+    const window = ctx.getWindow()
+    const result = window
+      ? await dialog.showSaveDialog(window, options)
+      : await dialog.showSaveDialog(options)
+    if (result.canceled || !result.filePath) return null
+    await writeFile(result.filePath, readLogs(), 'utf8')
+    return result.filePath
+  })
 }
 
 const openDialogOptions = {

@@ -2,6 +2,7 @@ import { getPrinters, getDefaultPrinter } from 'unix-print'
 import type { PrinterInfo, PrintOptions } from '@shared/types'
 import type { PrintDriver, SpoolState, SubmitResult } from './driver.js'
 import { run, tryRun } from '../util/exec.js'
+import { log } from '../util/log.js'
 
 /**
  * CUPS-backed driver for macOS and Linux.
@@ -20,6 +21,7 @@ export class UnixDriver implements PrintDriver {
       getDefaultPrinter().catch(() => null)
     ])
     const defaultName = fallback?.printer ?? ''
+    log.info(`Found ${printers.length} printer(s)`, { printers, defaultName })
 
     return printers.map((p) => ({
       name: p.printer,
@@ -40,8 +42,16 @@ export class UnixDriver implements PrintDriver {
     // `--` guards against a path that begins with a dash.
     args.push('--', pdfPath)
 
-    const { stdout } = await run('lp', args)
+    log.info('Submitting to lp', { args })
+    let stdout: string
+    try {
+      ;({ stdout } = await run('lp', args))
+    } catch (error) {
+      log.error('lp failed', error)
+      throw error
+    }
     const nativeJobId = parseRequestId(stdout)
+    log.info('lp accepted the job', { nativeJobId, stdout: stdout.trim() })
 
     // Without an id there is nothing to poll, so degrade honestly rather than
     // pretending the job is being tracked.
@@ -78,6 +88,12 @@ export class UnixDriver implements PrintDriver {
 
   async cancel(nativeJobId: string): Promise<void> {
     await run('cancel', [nativeJobId])
+  }
+
+  async diagnose(): Promise<void> {
+    const status = await tryRun('lpstat', ['-t'])
+    if (status) log.info('lpstat -t\n' + status.stdout.trim())
+    else log.error('lpstat -t failed')
   }
 }
 

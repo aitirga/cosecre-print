@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path'
 import electronUpdater, { type AppUpdater, type UpdateInfo } from 'electron-updater'
 import type { UpdateState } from '@shared/types'
 import { tryRun } from './util/exec.js'
+import { log } from './util/log.js'
 
 /** Keep in sync with the `publish` block in electron-builder.yml. */
 const REPO = 'aitirga/cosecre-print'
@@ -87,10 +88,9 @@ export class Updater {
 
     autoUpdater.autoDownload = canSelfInstall
     autoUpdater.autoInstallOnAppQuit = canSelfInstall
-    // Silent by default — a failed update check is not the user's problem. Set
-    // COSECRE_UPDATER_DEBUG=1 to trace the feed request when diagnosing why a
-    // release is or is not being offered.
-    autoUpdater.logger = process.env['COSECRE_UPDATER_DEBUG'] ? console : null
+    // Into the app log, not the UI — a failed update check is not the user's
+    // problem, but it is exactly what to read when a release is not offered.
+    autoUpdater.logger = log
 
     autoUpdater.on('checking-for-update', () => this.patch({ phase: 'checking' }))
 

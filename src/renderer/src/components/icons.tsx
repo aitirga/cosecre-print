@@ -45,6 +45,13 @@ export const SettingsIcon = (props: SVGProps<SVGSVGElement>): ReactNode => (
   </Icon>
 )
 
+export const LogsIcon = (props: SVGProps<SVGSVGElement>): ReactNode => (
+  <Icon {...props}>
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d="m7 9 3 3-3 3M13 15h4" />
+  </Icon>
+)
+
 export const PlusIcon = (props: SVGProps<SVGSVGElement>): ReactNode => (
   <Icon {...props}>
     <path d="M12 5v14M5 12h14" />

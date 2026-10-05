@@ -27,6 +27,9 @@ export interface PrintDriver {
   poll(nativeJobIds: string[]): Promise<Map<string, SpoolState>>
 
   cancel(nativeJobId: string, printer: string): Promise<void>
+
+  /** Write a snapshot of the print setup to the log, for remote debugging. */
+  diagnose(): Promise<void>
 }
 
 let cached: PrintDriver | undefined

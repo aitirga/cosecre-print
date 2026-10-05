@@ -28,6 +28,12 @@ export const IPC = {
   checkForUpdates: 'update:check',
   applyUpdate: 'update:apply',
 
+  getLogs: 'logs:get',
+  clearLogs: 'logs:clear',
+  saveLogs: 'logs:save',
+  openLogsFolder: 'logs:open-folder',
+  runDiagnostics: 'logs:diagnose',
+
   // main -> renderer
   jobsChanged: 'jobs:changed',
   historyChanged: 'history:changed',

@@ -15,6 +15,7 @@ import { getDriver } from '../printing/driver.js'
 import { createJob, toHistoryEntry } from './job.js'
 import type { HistoryStore } from '../store/history.js'
 import type { SettingsStore } from '../store/settings.js'
+import { log } from '../util/log.js'
 
 const POLL_INTERVAL_MS = 1000
 
@@ -91,8 +92,14 @@ export class Scheduler {
       if (check.ok) {
         this.#jobs.set(check.job.id, check.job)
         jobs.push(check.job)
+        log.info(`Added ${tag(check.job)}`, {
+          path,
+          sizeBytes: check.job.sizeBytes,
+          printer: check.job.options.printer
+        })
       } else {
         rejected.push(check.rejection)
+        log.warn('Rejected file', check.rejection)
       }
     }
 
@@ -160,6 +167,7 @@ export class Scheduler {
       this.#fail(id, 'No printer selected.')
       return
     }
+    log.info(`Print requested for ${tag(job)}`, job.options)
 
     this.#canceled.delete(id)
     const queue = this.#queueFor(job.options.printer)
@@ -180,6 +188,7 @@ export class Scheduler {
         const driver = await getDriver()
         const options = this.#jobs.get(id)!.options
         const result = await driver.submit(printablePath, options, current.fileName)
+        log.info(`Spooler accepted ${tag(current)}`, result)
 
         if (this.#canceled.has(id)) {
           if (result.nativeJobId) {
@@ -249,9 +258,11 @@ export class Scheduler {
 
     this.#patch(id, { status: 'preparing' })
 
+    log.info(`Converting ${tag(job)} with LibreOffice`)
     const promise = this.#pool
       .convert(job.sourcePath, this.settings.get().libreOfficePath)
       .then((pdfPath) => {
+        log.info(`Converted ${tag(job)}`, { pdfPath })
         const current = this.#jobs.get(id)
         // Only advance to `ready` if nothing else moved the job on in the
         // meantime (the user may have cancelled during conversion).
@@ -314,9 +325,10 @@ export class Scheduler {
           if (job && job.status !== state) this.#patch(jobId, { status: state })
         }
       }
-    } catch {
+    } catch (error) {
       // A transient spooler hiccup should not tear down tracking; the next
       // tick will try again.
+      log.warn('Polling the spooler failed', error)
     }
 
     if (this.#tracked.size === 0) this.#stopPolling()
@@ -355,6 +367,7 @@ export class Scheduler {
     const job = this.#jobs.get(id)
     if (!job || isTerminal(job.status)) return
     job.error = message
+    log.error(`${tag(job)} failed: ${message}`)
     this.#finish(id, 'failed')
   }
 
@@ -364,6 +377,7 @@ export class Scheduler {
 
     job.status = status
     job.finishedAt = Date.now()
+    if (status !== 'failed') log.info(`${tag(job)} ${status}`)
     if (job.nativeJobId) this.#tracked.delete(job.nativeJobId)
 
     const entry = toHistoryEntry(job)
@@ -395,6 +409,11 @@ export class Scheduler {
     this.#stopPolling()
     await this.#pool.dispose()
   }
+}
+
+/** How a job is named in the log: short enough to scan, unique enough to follow. */
+function tag(job: Job): string {
+  return `"${job.fileName}" [${job.id.slice(0, 8)}]`
 }
 
 function describe(error: unknown): string {
